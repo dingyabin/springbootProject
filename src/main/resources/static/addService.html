@@ -11,20 +11,21 @@
        }
 
        function add(obj) {
+           obj.setAttribute("disabled",'true');
            var div= obj.parentNode;
            var divPar =div.parentNode;
-           divPar.appendChild();
+           divPar.appendChild(div.cloneNode(true));
        }
 
-       function del(obj){
-           var div= obj.parentNode;
-           var divPar =div.parentNode;
-           divPar.removeChild(div);
+       function del(obj) {
+           var div = obj.parentNode;
+           var divPar = div.parentNode;
+           if (divPar.getElementsByTagName("div").length > 1) {
+               divPar.removeChild(div);
+           }else{
+               obj.setAttribute("disabled",'false');
+           }
        }
-
-
-
-
 
 
 
