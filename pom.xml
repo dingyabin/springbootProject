@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.dingyabin</groupId>
+    <artifactId>springbootProject</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+        <spring.version>4.3.10.RELEASE</spring.version>
+        <spring.boot.version>1.5.6.RELEASE</spring.boot.version>
+        <open.frame.version>1.0.1-SNAPSHOT</open.frame.version>
+        <jackson.version>2.9.0</jackson.version>
+    </properties>
+
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>net.wecash</groupId>
+                <artifactId>open-frame-web</artifactId>
+                <version>${open.frame.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.wecash</groupId>
+                <artifactId>open-frame-jdbc</artifactId>
+                <version>${open.frame.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.wecash</groupId>
+                <artifactId>open-frame-config</artifactId>
+                <version>${open.frame.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.wecash</groupId>
+                <artifactId>open-frame-base</artifactId>
+                <version>${open.frame.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.wecash</groupId>
+                <artifactId>open-frame-redis</artifactId>
+                <version>${open.frame.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.wecash</groupId>
+                <artifactId>open-frame-logger</artifactId>
+                <version>${open.frame.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-actuator</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>1.16.6</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>net.wecash</groupId>
+            <artifactId>open-frame-jdbc</artifactId>
+        </dependency>
+
+        <!-- 提供 shutdown 接口 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.wecash</groupId>
+            <artifactId>open-frame-config</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+    </dependencies>
+
+
+    <profiles>
+        <profile>
+            <id>FAT</id>
+            <properties>
+                <deploy.type>FAT</deploy.type>
+            </properties>
+        </profile>
+        <profile>
+            <id>PRO</id>
+            <properties>
+                <deploy.type>PRO</deploy.type>
+            </properties>
+        </profile>
+    </profiles>
+
+
+
+    <build>
+        <finalName>springbootProject</finalName>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources.${deploy.type}</directory>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
+
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>1.5.6.RELEASE</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.6.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

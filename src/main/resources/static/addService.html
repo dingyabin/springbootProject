@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script type="application/javascript" language="JavaScript">
+
+       function submit() {
+
+       }
+
+
+
+
+
+
+
+
+
+
+    </script>
+</head>
+
+
+ <body>
+    <center><h3>添加服务</h3></center>
+
+    <form method="post" action="http://localhost:8080/service/addService">
+        <table>
+            <tr>
+                <td>serviceName:</td>
+                <td><input type="text" name="serviceName"/></td>
+            </tr>
+            <tr>
+                <td>serviceType:</td>
+                <td> <input type="text" name="serviceType"/></td>
+            </tr>
+            <tr>
+                <td>serviceDescription: </td>
+                <td><input type="text" name="serviceDescription"/></td>
+            </tr>
+            <tr>
+                <td>serviceFormatType:</td>
+                <td><input type="text" name="serviceFormatType"/></td>
+            </tr>
+            <tr>
+                <td>url:</td>
+                <td><input type="text" name="url"/></td>
+            </tr>
+            <tr>
+                <td>method:</td>
+                <td>
+                    <select name="method">
+                        <option value="GET">GET</option>
+                        <option value="POST">POST</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>header:</td>
+                <td> <input type="text" name="header"/></td>
+            </tr>
+            <tr>
+                <td>params:</td>
+                <td><input type="text" name="params"/></td>
+            </tr>
+            <tr>
+                <td>resultParseTemplate:</td>
+                <td><input type="text" name="resultParseTemplate"/></td>
+            </tr>
+            <tr>
+                <td>codeInfo:</td>
+                <td><input type="text" name="codeInfo"/></td>
+            </tr>
+            <tr>
+                <td colspan="2"><button type="button" onclick="submit()">提交</button></td>
+            </tr>
+        </table>
+
+    </form>
+ </body>
+</html>

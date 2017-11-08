@@ -1,0 +1,11 @@
+
+INSERT INTO services (service_name,service_type,service_state,service_description,create_time,update_time,max_auth_count,fields) VALUES ('${serviceName}','${serviceType}','normal','${serviceDescription}',now(),now(),'10','0');
+
+
+INSERT INTO service_data_format (service_type,data_format_type,state,create_time,service_format_type,request_id,allow_callback,allow_paint,allow_diy_protocol,allow_diy_css,default_css,service_name,data_format_property,data_format_name,service_format_name,data_property_name,data_format_is_show,data_format_combination_ids)VALUES('${serviceType}','origin','normal', now(),'${serviceFormatType}', ${requestId},true,true,true,false,'/**/', '${serviceName}','basic','原始数据','接口授权', '${serviceName}','t','1');
+
+
+INSERT INTO request (id,url,method,charset,timeout,gzip,accept_stat_code,header,params,create_time,update_time,result_parse_template) VALUES (${requestId},'${url}','${method}','UTF-8','10000',false,'200','${header}','${params}',now(),now(),${resultParseTemplate});
+
+
+INSERT INTO code_dict (`key`, code_type, code, message, success, create_time, update_time, can_retry) VALUES ('${key}', '${codeType}', '${code}', '${message}', ${success}, now(), now(), true);
