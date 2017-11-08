@@ -10,8 +10,17 @@
 
        }
 
+       function add(obj) {
+           var div= obj.parentNode;
+           var divPar =div.parentNode;
+           divPar.appendChild();
+       }
 
-
+       function del(obj){
+           var div= obj.parentNode;
+           var divPar =div.parentNode;
+           divPar.removeChild(div);
+       }
 
 
 
@@ -71,7 +80,22 @@
             </tr>
             <tr>
                 <td>codeInfo:</td>
-                <td><input type="text" name="codeInfo"/></td>
+                <td>
+                    <div>
+                        codeType:<select name="codeType">
+                        <option value="http">http</option>
+                        <option value="code">code</option>
+                    </select>
+                        code:    <input type="text" name="code"/>
+                        message: <input type="text" name="message"/>
+                        success: <select name="success:">
+                        <option value="true">true</option>
+                        <option value="false">false</option>
+                    </select>
+                        <button type="button" onclick="add(this)">增加</button>
+                        <button type="button" onclick="del(this)">删除</button>
+                    </div>
+                </td>
             </tr>
             <tr>
                 <td colspan="2"><button type="button" onclick="submit()">提交</button></td>
