@@ -7,16 +7,21 @@
     <script type="application/javascript" language="JavaScript">
 
        function submits() {
-           var response= loadDoc(buildData());
-           alert(response.message);
+           loadDoc(buildData());
        }
+
 
        function loadDoc(data) {
            var xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
-           xmlhttp.open("POST", "http://localhost:8080/service/addService", false);
+           xmlhttp.onreadystatechange=function() {
+               if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+                   var resp=JSON.parse(xmlhttp.responseText);
+                   alert(resp.message);
+               }
+           }
+           xmlhttp.open("POST", "http://localhost:8080/service/addService", true);
            xmlhttp.setRequestHeader("Content-type", "application/json;charset=utf-8");
            xmlhttp.send(data);
-           return JSON.parse(xmlhttp.responseText);
        }
 
 
