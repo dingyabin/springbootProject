@@ -2,16 +2,52 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>添加服务</title>
 
     <script type="application/javascript" language="JavaScript">
 
-       function submit() {
+       function submits() {
+           var response= loadDoc(buildData());
+           alert(response.message);
+       }
 
+       function loadDoc(data) {
+           var xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+           xmlhttp.open("POST", "http://localhost:8080/service/addService", false);
+           xmlhttp.setRequestHeader("Content-type", "application/json;charset=utf-8");
+           xmlhttp.send(data);
+           return JSON.parse(xmlhttp.responseText);
+       }
+
+
+       function buildData() {
+           var codeInfos = [];
+           var codeInfoDivs = document.getElementsByName("codeInfo");
+           for (var i = 0; i < codeInfoDivs.length; i++) {
+               var data = codeInfoDivs[i].children;
+               codeInfos.push({
+                   "codeType": data[0].value,
+                   "code": data[1].value,
+                   "message": data[2].value,
+                   "success": data[3].value
+               });
+           }
+           var serviceObj = {
+               "serviceName": document.getElementsByName("serviceName")[0].value,
+               "serviceType": document.getElementsByName("serviceType")[0].value,
+               "serviceDescription": document.getElementsByName("serviceDescription")[0].value,
+               "serviceFormatType": document.getElementsByName("serviceFormatType")[0].value,
+               "url": document.getElementsByName("url")[0].value,
+               "method": document.getElementsByName("method")[0].value,
+               "header": document.getElementsByName("header")[0].value,
+               "params": document.getElementsByName("params")[0].value,
+               "resultParseTemplate": document.getElementsByName("resultParseTemplate")[0].value,
+               "codeInfo": codeInfos
+           };
+           return JSON.stringify(serviceObj);
        }
 
        function add(obj) {
-           obj.setAttribute("disabled",'true');
            var div= obj.parentNode;
            var divPar =div.parentNode;
            divPar.appendChild(div.cloneNode(true));
@@ -23,12 +59,9 @@
            if (divPar.getElementsByTagName("div").length > 1) {
                divPar.removeChild(div);
            }else{
-               obj.setAttribute("disabled",'false');
+               alert("不要再删了。。。。。")
            }
        }
-
-
-
     </script>
 </head>
 
@@ -36,27 +69,27 @@
  <body>
     <center><h3>添加服务</h3></center>
 
-    <form method="post" action="http://localhost:8080/service/addService">
+    <form id="serviceTable">
         <table>
             <tr>
                 <td>serviceName:</td>
-                <td><input type="text" name="serviceName"/></td>
+                <td><input type="text" name="serviceName" required="required"/></td>
             </tr>
             <tr>
                 <td>serviceType:</td>
-                <td> <input type="text" name="serviceType"/></td>
+                <td> <input type="text" name="serviceType" required="required"/></td>
             </tr>
             <tr>
                 <td>serviceDescription: </td>
-                <td><input type="text" name="serviceDescription"/></td>
+                <td><input type="text" name="serviceDescription" required="required"/></td>
             </tr>
             <tr>
                 <td>serviceFormatType:</td>
-                <td><input type="text" name="serviceFormatType"/></td>
+                <td><input type="text" name="serviceFormatType" required="required"/></td>
             </tr>
             <tr>
                 <td>url:</td>
-                <td><input type="text" name="url"/></td>
+                <td><input type="text" name="url" required="required"/></td>
             </tr>
             <tr>
                 <td>method:</td>
@@ -69,11 +102,11 @@
             </tr>
             <tr>
                 <td>header:</td>
-                <td> <input type="text" name="header"/></td>
+                <td> <input type="text" name="header" required="required"/></td>
             </tr>
             <tr>
                 <td>params:</td>
-                <td><input type="text" name="params"/></td>
+                <td><input type="text" name="params" required="required"/></td>
             </tr>
             <tr>
                 <td>resultParseTemplate:</td>
@@ -82,24 +115,24 @@
             <tr>
                 <td>codeInfo:</td>
                 <td>
-                    <div>
-                        codeType:<select name="codeType">
-                        <option value="http">http</option>
-                        <option value="code">code</option>
-                    </select>
+                    <div name="codeInfo">
+                        codeType: <select name="codeType">
+                                    <option value="http">http</option>
+                                    <option value="code">code</option>
+                                  </select>
                         code:    <input type="text" name="code"/>
                         message: <input type="text" name="message"/>
-                        success: <select name="success:">
-                        <option value="true">true</option>
-                        <option value="false">false</option>
-                    </select>
+                        success: <select name="success">
+                                    <option value="true">true</option>
+                                    <option value="false">false</option>
+                                </select>
                         <button type="button" onclick="add(this)">增加</button>
                         <button type="button" onclick="del(this)">删除</button>
                     </div>
                 </td>
             </tr>
             <tr>
-                <td colspan="2"><button type="button" onclick="submit()">提交</button></td>
+                <td colspan="2"><button type="button" onclick="submits()">提交</button></td>
             </tr>
         </table>
 

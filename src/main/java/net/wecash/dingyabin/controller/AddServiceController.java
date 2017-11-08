@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.awt.*;
-import java.awt.datatransfer.StringSelection;
 import java.io.IOException;
 import java.util.Map;
 
@@ -46,7 +44,6 @@ public class AddServiceController {
 
         //打印sql
         String sql = addService.buildSQL(paramMap);
-        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(sql), null);
         log.info("恭喜,{}服务测试环境添加完毕！\n\n\n给老胖子发邮件吧，内容为(已复制到剪贴板):\n{}",
                 paramMap.get("serviceType"), sql);
         return new Response<>().success().toString();
