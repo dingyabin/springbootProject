@@ -3,13 +3,17 @@ package net.wecash.dingyabin.controller;
 import net.wecash.dingyabin.services.AddService;
 import lombok.extern.slf4j.Slf4j;
 import net.wecash.web.Response;
+import net.wecash.web.exception.BaseBusinessException;
 import net.wecash.web.filter.ReadableHttpServletRequestWrapper;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Map;
 
 import static net.wecash.utils.WebUtils.genParamMap;
@@ -29,6 +33,9 @@ public class AddServiceController {
     public String addService(HttpServletRequest request) throws IOException {
         ReadableHttpServletRequestWrapper requestWrapper = new ReadableHttpServletRequestWrapper(request);
         Map<String, String> paramMap = genParamMap(requestWrapper.getWrappedParams(), requestWrapper.getWrappedJson());
+        //校验参数
+        assertNotNull(paramMap, "resultParseTemplate", "codeInfo");
+
         //插入service
         addService.saveService(paramMap);
 
@@ -50,5 +57,13 @@ public class AddServiceController {
     }
 
 
+
+    private void assertNotNull( Map<String, String> map ,String ... nullAbleFilds){
+        map.forEach((k,v)->{
+            if (!ArrayUtils.contains(nullAbleFilds, k) && StringUtils.isBlank(v)) {
+                throw new BaseBusinessException("E000001",k+"不能为空！");
+            }
+        });
+    }
 
 }
