@@ -69,7 +69,11 @@
            xmlhttp.onreadystatechange=function() {
                if (xmlhttp.readyState==4 && xmlhttp.status==200) {
                    var resp=JSON.parse(xmlhttp.responseText);
-                   alert(resp.message);
+                   if (resp.success){
+                       document.getElementById("finalResult").value = resp.data;
+                   }else {
+                       document.getElementById("finalResult").value = "出错了................";
+                   }
                }
            };
            xmlhttp.open("POST", "http://localhost:8080/service/addService", true);
@@ -139,6 +143,11 @@
         function synchronize() {
             document.getElementsByName("serviceFormatType")[0].value='synchronize_api';
         }
+
+       function copyMessage() {
+           document.getElementById("finalResult").select();
+           document.execCommand("Copy");
+       }
 
     </script>
 </head>
@@ -216,7 +225,14 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="2"><button type="button" onclick="submits()" class="add">提交</button></td>
+                <td>执行结果:</td>
+                <td><textarea rows="13" cols="160" id="finalResult"></textarea></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button type="button" onclick="submits()" class="add">提交</button>
+                    <button type="button" onclick="copyMessage()" class="add">复制结果</button>
+                </td>
             </tr>
         </table>
 
