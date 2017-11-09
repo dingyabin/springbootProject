@@ -36,7 +36,7 @@
             border-style: none;
             background-color: #4A90E2;
             height: 30px;
-            width: 165px;
+            width: 155px;
         }
     </style>
 
@@ -111,7 +111,12 @@
        function add(obj) {
            var div= obj.parentNode;
            var divPar =div.parentNode;
-           divPar.appendChild(div.cloneNode(true));
+           var cloneDiv = div.cloneNode(true);
+           var inputs =cloneDiv.getElementsByTagName("input");
+           for (var i = 0; i < inputs.length; i++) {
+               inputs[i].value = null;
+           }
+           divPar.appendChild(cloneDiv);
        }
 
 
