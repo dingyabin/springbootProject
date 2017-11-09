@@ -3,11 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <title>添加服务</title>
+    <style type="text/css">
+        .add {
+            padding: 2px 5px 2px 5px;
+            border-radius:5px;
+            border-style: none;
+            background-color: #4A90E2;
+            width: 65px;
+            height: 30px;
+        }
+        .del {
+            padding: 2px 5px 2px 5px;
+            border-radius:5px;
+            border-style: none;
+            background-color: hotpink;
+            width: 65px;
+            height: 30px;
+        }
+        input {
+            width: 350px;
+            height: 25px;
+            border-color:#4A90E2 #4A90E2;
+            border-width:1px;
+        }
+        select{
+            height: 30px;
+            border-color:#4A90E2 #4A90E2;
+        }
+    </style>
+
 
     <script type="application/javascript" language="JavaScript">
 
        function submits() {
+           var result = inputVailed(document.getElementsByTagName("input"));
+           if (!result.ok){
+               alert(result.name + "不能为空!");
+               return;
+            }
            loadDoc(buildData());
+       }
+
+
+
+       function inputVailed(inputs) {
+           for (var i = 0; i < inputs.length; i++) {
+               if (inputs[i].required && (inputs[i].value == null || inputs[i].value == "")) {
+                   return {"ok": false, "name": inputs[i].name};
+               }
+           }
+           return {"ok": true};
        }
 
 
@@ -18,7 +63,7 @@
                    var resp=JSON.parse(xmlhttp.responseText);
                    alert(resp.message);
                }
-           }
+           };
            xmlhttp.open("POST", "http://localhost:8080/service/addService", true);
            xmlhttp.setRequestHeader("Content-type", "application/json;charset=utf-8");
            xmlhttp.send(data);
@@ -52,11 +97,16 @@
            return JSON.stringify(serviceObj);
        }
 
+
+
+
        function add(obj) {
            var div= obj.parentNode;
            var divPar =div.parentNode;
            divPar.appendChild(div.cloneNode(true));
        }
+
+
 
        function del(obj) {
            var div = obj.parentNode;
@@ -77,67 +127,67 @@
     <form id="serviceTable">
         <table>
             <tr>
-                <td>serviceName:</td>
+                <td>服务名称(serviceName):</td>
                 <td><input type="text" name="serviceName" required="required"/></td>
             </tr>
             <tr>
-                <td>serviceType:</td>
+                <td>服务类型(serviceType):</td>
                 <td> <input type="text" name="serviceType" required="required"/></td>
             </tr>
             <tr>
-                <td>serviceDescription: </td>
+                <td>服务描述(serviceDescription): </td>
                 <td><input type="text" name="serviceDescription" required="required"/></td>
             </tr>
             <tr>
-                <td>serviceFormatType:</td>
+                <td>服务格式类型(serviceFormatType):</td>
                 <td><input type="text" name="serviceFormatType" required="required"/></td>
             </tr>
             <tr>
-                <td>url:</td>
+                <td>对应爬虫接口地址(url):</td>
                 <td><input type="text" name="url" required="required"/></td>
             </tr>
             <tr>
-                <td>method:</td>
+                <td>接口方法(method):</td>
                 <td>
                     <select name="method">
-                        <option value="GET">GET</option>
                         <option value="POST">POST</option>
+                        <option value="GET">GET</option>
                     </select>
                 </td>
             </tr>
             <tr>
-                <td>header:</td>
+                <td>请求头(header):</td>
                 <td> <input type="text" name="header" required="required"/></td>
             </tr>
             <tr>
-                <td>params:</td>
+                <td>请求参数(params):</td>
                 <td><input type="text" name="params" required="required"/></td>
             </tr>
             <tr>
-                <td>resultParseTemplate:</td>
+                <td>结果解析(resultParseTemplate):</td>
                 <td><input type="text" name="resultParseTemplate"/></td>
             </tr>
             <tr>
-                <td>codeInfo:</td>
+                <td>返回code码信息(codeInfo):</td>
                 <td>
                     <div name="codeInfo">
                         codeType: <select name="codeType">
-                                    <option value="http">http</option>
-                                    <option value="code">code</option>
+                                    <option value="http">HTTP</option>
+                                    <option value="code">CODE</option>
                                   </select>
                         code:    <input type="text" name="code"/>
                         message: <input type="text" name="message"/>
                         success: <select name="success">
-                                    <option value="true">true</option>
-                                    <option value="false">false</option>
+                                    <option value="true">TRUE</option>
+                                    <option value="false">FALSE</option>
                                 </select>
-                        <button type="button" onclick="add(this)">增加</button>
-                        <button type="button" onclick="del(this)">删除</button>
+                        <button type="button" onclick="add(this)" class="add">增加</button>
+                        <button type="button" onclick="del(this)" class="del">删除</button>
                     </div>
                 </td>
             </tr>
             <tr>
-                <td colspan="2"><button type="button" onclick="submits()">提交</button></td>
+                <td colspan="2"><button type="button" onclick="submits()" class="add">提交</button></td>
             </tr>
         </table>
 
