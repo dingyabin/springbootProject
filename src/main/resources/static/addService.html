@@ -30,6 +30,14 @@
             height: 30px;
             border-color:#4A90E2 #4A90E2;
         }
+        .synchronize{
+            padding: 2px 5px 2px 5px;
+            border-radius:5px;
+            border-style: none;
+            background-color: #4A90E2;
+            height: 30px;
+            width: 165px;
+        }
     </style>
 
 
@@ -117,6 +125,16 @@
                alert("不要再删了。。。。。")
            }
        }
+
+
+        function defaultTemplate() {
+            document.getElementsByName("resultParseTemplate")[0].value='{"type": "JSONObject","code": "code","data": ""}';
+        }
+
+        function synchronize() {
+            document.getElementsByName("serviceFormatType")[0].value='synchronize_api';
+        }
+
     </script>
 </head>
 
@@ -140,7 +158,10 @@
             </tr>
             <tr>
                 <td>服务格式类型(serviceFormatType):</td>
-                <td><input type="text" name="serviceFormatType" required="required"/></td>
+                <td>
+                    <input type="text" name="serviceFormatType" required="required"/>
+                    <button type="button" onclick="synchronize()" class="synchronize">同步查询接口快捷按钮</button>
+                </td>
             </tr>
             <tr>
                 <td>对应爬虫接口地址(url):</td>
@@ -165,7 +186,10 @@
             </tr>
             <tr>
                 <td>结果解析(resultParseTemplate):</td>
-                <td><input type="text" name="resultParseTemplate"/></td>
+                <td>
+                    <input type="text" name="resultParseTemplate"/>
+                    <button type="button" onclick="defaultTemplate()" class="add">参考配置</button>
+                </td>
             </tr>
             <tr>
                 <td>返回code码信息(codeInfo):</td>
