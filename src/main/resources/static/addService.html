@@ -48,7 +48,7 @@
             width: 105px;
         }
         .short{
-            width: 160px;
+            width: 200px;
             height: 25px;
             border-color:#4A90E2 #4A90E2;
             border-width:1px;
@@ -177,7 +177,11 @@
        function autoFillParam(obj) {
            var div = obj.parentNode;
            var children = div.children;
-           children[1].value = "${" + obj.value + "}";
+           if(obj.value!=""){
+               children[1].value = "${" + obj.value + "}";
+           }else {
+               children[1].value = null;
+           }
        }
 
        function remove$(obj) {
@@ -235,11 +239,11 @@
                 <td>请求参数(params):</td>
                 <td>
                     <div name="paramInfo">
-                        <input type="text" name="crawlerParam" required="required" placeholder=" 爬虫需要的参数" class="short" onblur="autoFillParam(this)"/> =
-                        <input type="text" name="platParam"    required="required" placeholder=" 平台拿到的参数${param}" class="short"/>
+                        <input type="text" name="crawlerParam" required="required" placeholder=" 爬虫需要的参数(crawlerParam)" class="short" onblur="autoFillParam(this)"/> =
+                        <input type="text" name="platParam"    required="required" placeholder=" 平台拿到的参数${platParam}" class="short"/>
+                        <button type="button" onclick="remove$(this)" class="delchar">不需要占位符</button>
                         <button type="button" onclick="add(this)" class="add">增加</button>
                         <button type="button" onclick="del(this)" class="del">删除</button>
-                        <button type="button" onclick="remove$(this)" class="delchar">不需要占位符</button>
                     </div>
                 </td>
             </tr>
