@@ -45,7 +45,7 @@ public class AddServiceController {
         //插入ServiceDataFormat
         addService.saveServiceDataFormat(paramMap);
 
-        //插入CodeDictt
+        //插入CodeDict
         addService.saveCodeDict(paramMap);
 
         //打印sql

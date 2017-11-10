@@ -21,10 +21,11 @@
             height: 30px;
         }
         input {
-            width: 350px;
+            width: 300px;
             height: 25px;
             border-color:#4A90E2 #4A90E2;
             border-width:1px;
+            margin-bottom: 3px;
         }
         select{
             height: 30px;
@@ -37,6 +38,21 @@
             background-color: #4A90E2;
             height: 30px;
             width: 155px;
+        }
+        .delchar{
+            padding: 2px 5px 2px 5px;
+            border-radius:5px;
+            border-style: none;
+            background-color: #4A90E2;
+            height: 30px;
+            width: 105px;
+        }
+        .short{
+            width: 160px;
+            height: 25px;
+            border-color:#4A90E2 #4A90E2;
+            border-width:1px;
+            margin-bottom: 3px;
         }
     </style>
 
@@ -86,14 +102,25 @@
            var codeInfos = [];
            var codeInfoDivs = document.getElementsByName("codeInfo");
            for (var i = 0; i < codeInfoDivs.length; i++) {
-               var data = codeInfoDivs[i].children;
+               var codeInfoData = codeInfoDivs[i].children;
                codeInfos.push({
-                   "codeType": data[0].value,
-                   "code": data[1].value,
-                   "message": data[2].value,
-                   "success": data[3].value
+                   "codeType": codeInfoData[0].value,
+                   "code": codeInfoData[1].value,
+                   "message": codeInfoData[2].value,
+                   "success": codeInfoData[3].value
                });
            }
+
+           var paramInfos = [];
+           var paramInfoDivs = document.getElementsByName("paramInfo");
+           for (var j = 0; j < paramInfoDivs.length; j++) {
+               var paramData = paramInfoDivs[j].children;
+               paramInfos.push({
+                   "crawlerParam": paramData[0].value,
+                   "platParam": paramData[1].value
+               });
+           }
+
            var serviceObj = {
                "serviceName": document.getElementsByName("serviceName")[0].value,
                "serviceType": document.getElementsByName("serviceType")[0].value,
@@ -102,14 +129,12 @@
                "url": document.getElementsByName("url")[0].value,
                "method": document.getElementsByName("method")[0].value,
                "header": document.getElementsByName("header")[0].value,
-               "params": document.getElementsByName("params")[0].value,
+               "params": paramInfos,
                "resultParseTemplate": document.getElementsByName("resultParseTemplate")[0].value,
                "codeInfo": codeInfos
            };
            return JSON.stringify(serviceObj);
        }
-
-
 
 
        function add(obj) {
@@ -147,6 +172,18 @@
        function copyMessage() {
            document.getElementById("finalResult").select();
            document.execCommand("Copy");
+       }
+       
+       function autoFillParam(obj) {
+           var div = obj.parentNode;
+           var children = div.children;
+           children[1].value = "${" + obj.value + "}";
+       }
+
+       function remove$(obj) {
+           var div = obj.parentNode;
+           var children = div.children;
+           children[1].value = children[0].value;
        }
 
     </script>
@@ -196,7 +233,15 @@
             </tr>
             <tr>
                 <td>请求参数(params):</td>
-                <td><input type="text" name="params" required="required"/></td>
+                <td>
+                    <div name="paramInfo">
+                        <input type="text" name="crawlerParam" required="required" placeholder=" 爬虫需要的参数" class="short" onblur="autoFillParam(this)"/> =
+                        <input type="text" name="platParam"    required="required" placeholder=" 平台拿到的参数${param}" class="short"/>
+                        <button type="button" onclick="add(this)" class="add">增加</button>
+                        <button type="button" onclick="del(this)" class="del">删除</button>
+                        <button type="button" onclick="remove$(this)" class="delchar">不需要占位符</button>
+                    </div>
+                </td>
             </tr>
             <tr>
                 <td>结果解析(resultParseTemplate):</td>

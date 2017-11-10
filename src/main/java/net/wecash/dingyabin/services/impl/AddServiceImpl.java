@@ -6,6 +6,7 @@ import net.wecash.dingyabin.dao.AddServiceDao;
 import net.wecash.dingyabin.services.AddService;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.wecash.utils.GsonUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -50,8 +51,16 @@ public class AddServiceImpl implements AddService {
         requestMap.put("url", map.get("url"));
         requestMap.put("method", map.get("method"));
         requestMap.put("header", map.get("header"));
-        requestMap.put("params", map.get("params"));
-        requestMap.put("resultParseTemplate", map.get("resultParseTemplate"));
+        JSONArray arrays = JSONObject.parseArray(Optional.ofNullable(map.get("params")).orElse("[]"));
+        Map<String, String> paramMap = Maps.newHashMap();
+        for (int i = 0; i < arrays.size(); i++) {
+            JSONObject jsonObject = arrays.getJSONObject(i);
+            paramMap.put(jsonObject.getString("crawlerParam"), jsonObject.getString("platParam"));
+        }
+        requestMap.put("params", GsonUtils.toJson(paramMap));
+        if (StringUtils.isNotBlank(map.get("resultParseTemplate"))) {
+            requestMap.put("resultParseTemplate", map.get("resultParseTemplate"));
+        }
         addServiceDao.saveRequest(requestMap);
         return requestMap;
     }
