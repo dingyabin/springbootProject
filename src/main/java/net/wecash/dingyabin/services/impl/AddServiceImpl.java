@@ -25,6 +25,34 @@ public class AddServiceImpl implements AddService {
     @Resource
     private AddServiceDao addServiceDao;
 
+
+    @Override
+    public Map<String, Object> selectByServiceType(String serviceType) {
+        if (StringUtils.isBlank(serviceType)){
+            return null;
+        }
+        return addServiceDao.selectByServiceType(serviceType);
+    }
+
+
+    @Override
+    public Map<String, Object> selectRequestById(String requestId) {
+        if (StringUtils.isBlank(requestId)){
+            return null;
+        }
+        return addServiceDao.selectByRequestId(Long.valueOf(requestId));
+    }
+
+
+    @Override
+    public Map<String, Object> selectClientService(String source,String serviceType) {
+        if (StringUtils.isBlank(source) || StringUtils.isBlank(serviceType)) {
+            return null;
+        }
+        return addServiceDao.selectClientService(Long.valueOf(source),serviceType);
+    }
+
+
     @Override
     public void saveService(Map<String, String> map) {
         HashMap<String, Object> serviceMap = Maps.newHashMap();

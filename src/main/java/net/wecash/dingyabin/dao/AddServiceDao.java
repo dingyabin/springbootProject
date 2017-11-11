@@ -45,4 +45,29 @@ public interface AddServiceDao {
 
        int saveCodeDict(@Param("list") List<Map<String, Object>> list);
 
+
+       /**
+        * 根据serviceType查找服务
+        * @param serviceType serviceType
+        * @return
+        */
+       Map<String, Object> selectByServiceType(@Param("serviceType") String serviceType);
+
+
+       /**
+        * 根据RequestId查找Request
+        * @param requestId id
+        * @return
+        */
+       Map<String, Object> selectByRequestId(@Param("requestId") Long requestId);
+
+
+       /**
+        * 根据RequestId查找Request
+        * @param source source
+        * @param serviceType serviceType
+        * @return
+        */
+       Map<String, Object> selectClientService(@Param("source") Long source, @Param("serviceType") String serviceType);
+
 }

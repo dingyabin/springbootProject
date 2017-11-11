@@ -136,4 +136,16 @@
               )
         </foreach>
     </insert>
+
+    <select id ="selectByServiceType"  resultType="java.util.Map">
+        select * from  services  where service_type = #{serviceType}
+    </select>
+
+    <select id ="selectByRequestId"    resultType="java.util.Map">
+        select * from  request  where id = #{requestId}
+    </select>
+
+    <select id ="selectClientService"  resultType="java.util.Map">
+        select * from  client_service  where source = #{source} and service_type=#{serviceType}
+    </select>
 </mapper>

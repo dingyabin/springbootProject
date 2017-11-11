@@ -7,6 +7,7 @@ import net.wecash.web.exception.BaseBusinessException;
 import net.wecash.web.filter.ReadableHttpServletRequestWrapper;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,6 +35,12 @@ public class AddServiceController {
         Map<String, String> paramMap = genParamMap(requestWrapper.getWrappedParams(), requestWrapper.getWrappedJson());
         //校验参数
         assertNotNull(paramMap, "resultParseTemplate", "codeInfo");
+
+        //校验服务是否已经存在
+        Map<String, Object> service= addService.selectByServiceType(paramMap.get("serviceType"));
+        if (!CollectionUtils.isEmpty(service)){
+            throw new BaseBusinessException("E000003", paramMap.get("serviceType") + "服务已经存在");
+        }
 
         //插入service
         addService.saveService(paramMap);

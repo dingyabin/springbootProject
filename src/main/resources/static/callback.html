@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>配置回调</title>
+    <style type="text/css">
+        .add {
+            padding: 2px 5px 2px 5px;
+            border-radius:5px;
+            border-style: none;
+            background-color: #4A90E2;
+            width: 65px;
+            height: 30px;
+        }
+        .del {
+            padding: 2px 5px 2px 5px;
+            border-radius:5px;
+            border-style: none;
+            background-color: hotpink;
+            width: 65px;
+            height: 30px;
+        }
+        input {
+            width: 300px;
+            height: 25px;
+            border-color:#4A90E2 #4A90E2;
+            border-width:1px;
+            margin-bottom: 3px;
+        }
+        select{
+            height: 30px;
+            border-color:#4A90E2 #4A90E2;
+        }
+        .paramsInput{
+            font-family: Consolas,serif;
+        }
+        #tip{
+            color: red;
+            font-size: 0.8em;
+        }
+        .check{
+            padding: 2px 5px 2px 5px;
+            border-radius:5px;
+            border-style: none;
+            background-color: #4A90E2;
+            height: 30px;
+            width: 105px;
+        }
+    </style>
+
+
+    <script type="application/javascript" language="JavaScript">
+
+        function initConfig() {
+            document.getElementById("params").readOnly=false;
+            document.getElementById("params").innerHTML = '{"customerId": "${client_customer_id}","serviceType": "${service_type}","authView": "1","itemList": [{"grantConfigCode": "account","grantAttributeValue": "${account}"}]}';
+            document.getElementById("tip").innerHTML='可对配置进行修改';
+        }
+
+       function submits() {
+           var result = inputVailed(document.getElementsByTagName("input"));
+           if (!result.ok){
+               alert(result.name + "不能为空!");
+               return;
+            }
+           loadData("","POST",buildData(),function (resp) {
+               if (resp.success){
+                   document.getElementById("finalResult").value = resp.data;
+               }else {
+                   document.getElementById("finalResult").value = resp.message;
+               }
+           });
+       }
+
+
+
+       function inputVailed(inputs) {
+           for (var i = 0; i < inputs.length; i++) {
+               if (inputs[i].required && (inputs[i].value == null || inputs[i].value == "")) {
+                   return {"ok": false, "name": inputs[i].name};
+               }
+           }
+           return {"ok": true};
+       }
+
+
+       function buildData() {
+           var codeInfos = [];
+           var codeInfoDivs = document.getElementsByName("codeInfo");
+           for (var i = 0; i < codeInfoDivs.length; i++) {
+               var codeInfoData = codeInfoDivs[i].children;
+               codeInfos.push({
+                   "codeType": codeInfoData[0].value,
+                   "code": codeInfoData[1].value,
+                   "message": codeInfoData[2].value,
+                   "success": codeInfoData[3].value
+               });
+           }
+
+           var paramInfos = [];
+           var paramInfoDivs = document.getElementsByName("paramInfo");
+           for (var j = 0; j < paramInfoDivs.length; j++) {
+               var paramData = paramInfoDivs[j].children;
+               paramInfos.push({
+                   "crawlerParam": paramData[0].value,
+                   "platParam": paramData[1].value
+               });
+           }
+
+           var serviceObj = {
+               "serviceName": document.getElementsByName("serviceName")[0].value,
+               "serviceType": document.getElementsByName("serviceType")[0].value,
+               "serviceDescription": document.getElementsByName("serviceDescription")[0].value,
+               "serviceFormatType": document.getElementsByName("serviceFormatType")[0].value,
+               "url": document.getElementsByName("url")[0].value,
+               "method": document.getElementsByName("method")[0].value,
+               "header": document.getElementsByName("header")[0].value,
+               "params": paramInfos,
+               "resultParseTemplate": document.getElementsByName("resultParseTemplate")[0].value,
+               "codeInfo": codeInfos
+           };
+           return JSON.stringify(serviceObj);
+       }
+
+
+        function loadData(url, method, data, callback) {
+            var xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    var resp = JSON.parse(xmlhttp.responseText);
+                    callback(resp);
+                }
+            };
+            xmlhttp.open(method, url, true);
+            xmlhttp.setRequestHeader("Content-type", "application/json;charset=utf-8");
+            xmlhttp.send(data);
+        }
+
+
+       function add(obj) {
+           var div= obj.parentNode;
+           var divPar =div.parentNode;
+           var cloneDiv = div.cloneNode(true);
+           var inputs =cloneDiv.getElementsByTagName("input");
+           for (var i = 0; i < inputs.length; i++) {
+               inputs[i].value = null;
+           }
+           divPar.appendChild(cloneDiv);
+       }
+
+
+
+       function del(obj) {
+           var div = obj.parentNode;
+           var divPar = div.parentNode;
+           if (divPar.getElementsByTagName("div").length > 1) {
+               divPar.removeChild(div);
+           }else{
+               alert("不要再删了。。。。。")
+           }
+       }
+
+
+        function defaultTemplate() {
+            document.getElementById("resultParseTemplate").value='{"type": "JSONObject","code": "code","data": ""}';
+        }
+
+       function copyMessage() {
+           document.getElementById("finalResult").select();
+           document.execCommand("Copy");
+       }
+
+       function defaultParam(obj) {
+           if (obj.value == 1) {
+               initConfig();
+           } else {
+               document.getElementById("params").innerHTML = '{"service_type":"${service_type}","signature":"${signature}","client_customer_id":"${client_customer_id}","source":"${source}","state":"${state}","account":"${account}","token":"${token}","timestamp":"${timestamp}"}';
+               document.getElementById("params").readOnly=true;
+               document.getElementById("tip").innerHTML='不可修改';
+           }
+       }
+
+
+       function query() {
+           var data = {
+               "calllbackIndex": document.getElementById("calllbackIndex").value,
+               "serviceType": document.getElementById("serviceType").value,
+               "source": document.getElementById("source").value
+           };
+           loadData("", "POST", JSON.stringify(data), function (resp) {
+               if (resp.success) {
+                   document.getElementById("finalResult").value = resp.data;
+               } else {
+                   document.getElementById("finalResult").value = resp.message;
+               }
+           })
+       }
+
+    </script>
+</head>
+
+
+ <body onload="initConfig()">
+    <center><h3>配置回调</h3></center>
+
+    <form id="serviceTable">
+        <table>
+            <tr>
+                <td>第几次回调:</td>
+                <td>
+                    <select id="calllbackIndex" style="width:90px" onchange="defaultParam(this)">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>服务类型(serviceType):</td>
+                <td>
+                    <select id="serviceType" style="width:90px">
+                        <option value="transportation"> 运营商</option>
+                        <option value="insurance"> 社保</option>
+                        <option value="fund"> 公积金</option>
+                        <option value="taobao"> 淘宝</option>
+                        <option value="xuexinwang"> 学信网</option>
+                        <option value="jingdong"> 京东</option>
+                        <option value="central_bank_report"> 央行征信报告</option>
+                        <option value="credit_bank"> 信用卡网银</option>
+                        <option value="debit_bank"> 储蓄卡网银</option>
+                        <option value="exmail"> 企业邮箱</option>
+                        <option value="credit_card"> 信用卡账单邮箱</option>
+                        <option value="alipay"> 支付宝</option>
+                        <option value="contacts"> 通讯录</option>
+                        <option value="maimai"> 脉脉</option>
+                        <option value="sesame_credit_auth"> 芝麻信用</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>渠道号(source):</td>
+                <td> <input type="text" id="source" required="required"/></td>
+            </tr>
+            <tr>
+                <td>回调地址(url):</td>
+                <td><input type="text" id="url" required="required"/></td>
+            </tr>
+            <tr>
+                <td>接口方法(method):</td>
+                <td>
+                    <select id="method">
+                        <option value="POST">POST</option>
+                        <option value="GET">GET</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>请求头(header):</td>
+                <td> <input type="text" id="header" required="required"/></td>
+            </tr>
+            <tr>
+                <td>请求参数(params):</td>
+                <td>
+                    <textarea rows="8" cols="70" id="params" required="required" class="paramsInput"></textarea><span id="tip"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>结果解析(resultParseTemplate):</td>
+                <td>
+                    <input type="text" id="resultParseTemplate"/>
+                    <button type="button" onclick="defaultTemplate()" class="add">参考配置</button>
+                </td>
+            </tr>
+            <tr>
+                <td>返回code码信息(codeInfo):</td>
+                <td>
+                    <div id="codeInfo">
+                        codeType: <select id="codeType">
+                                    <option value="http">HTTP</option>
+                                    <option value="code">CODE</option>
+                                  </select>
+                        code:    <input type="text" id="code"/>
+                        message: <input type="text" id="message"/>
+                        success: <select id="success">
+                                    <option value="true">TRUE</option>
+                                    <option value="false">FALSE</option>
+                                </select>
+                        <button type="button" onclick="add(this)" class="add">增加</button>
+                        <button type="button" onclick="del(this)" class="del">删除</button>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>执行结果:</td>
+                <td><textarea rows="6" cols="160" id="finalResult"></textarea></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <center>
+                        <button type="button" onclick="query()" class="check">检查是否已配置</button>
+                        <button type="button" onclick="submits()" class="add">提交</button>
+                        <button type="button" onclick="copyMessage()" class="add">复制结果</button>
+                    </center>
+                </td>
+            </tr>
+        </table>
+
+    </form>
+ </body>
+</html>
