@@ -1,5 +1,6 @@
 package net.wecash.dingyabin.controller;
 
+import com.google.common.base.Strings;
 import net.wecash.dingyabin.services.AddService;
 import lombok.extern.slf4j.Slf4j;
 import net.wecash.web.Response;
@@ -77,21 +78,66 @@ public class AddServiceController {
         if (CollectionUtils.isEmpty(mapList)){
             return new Response<>().fail().msg("还没有订阅:" + map.get("serviceType")+"，请先订阅").toString();
         }
-        String requestId = null;
-        for (Map<String, Object> clientservivce : mapList) {
-            if (Objects.equals("1", map.get("calllbackIndex")) && isLegalId(clientservivce.get("login_request_id"))) {
-                requestId = clientservivce.get("login_request_id").toString();
-                break;
-            } else if (Objects.equals("2", map.get("calllbackIndex")) && isLegalId(clientservivce.get("request_id"))) {
-                requestId = clientservivce.get("request_id").toString();
-                break;
-            }
-        }
+        String requestId = getRequestId(map.get("calllbackIndex"), mapList);
         if (requestId != null) {
             Map<String, Object> request = addService.selectRequestById(requestId);
             return new Response<>().success().data(request).toString();
         }
         return new Response<>().fail().msg("还没有配置第" + map.get("calllbackIndex")+"次回调").toString();
     }
+
+
+
+
+    /**
+     *
+     * @param calllbackIndex 第几次回调
+     * @param mapList  clientservivce集合
+     * @return RequestId
+     */
+    private String getRequestId(String calllbackIndex, List<Map<String, Object>> mapList) {
+        String requestId = null;
+        for (Map<String, Object> clientservivce : mapList) {
+            if (Objects.equals("1", calllbackIndex) && isLegalId(clientservivce.get("login_request_id"))) {
+                requestId = clientservivce.get("login_request_id").toString();
+                break;
+            } else if (Objects.equals("2", calllbackIndex) && isLegalId(clientservivce.get("request_id"))) {
+                requestId = clientservivce.get("request_id").toString();
+                break;
+            }
+        }
+        return requestId;
+    }
+
+
+    @RequestMapping("/updateCallback")
+    public String updateCallback(HttpServletRequest req) throws IOException {
+        ReadableHttpServletRequestWrapper requestWrapper = new ReadableHttpServletRequestWrapper(req);
+        Map<String, String> map = genParamMap(requestWrapper.getWrappedParams(), requestWrapper.getWrappedJson());
+        //校验参数
+        assertNotNull(map,"resultParseTemplate", "codeInfo","id");
+        if (!Strings.isNullOrEmpty(map.get("id"))){
+            //todo 修改request
+            return "";
+        }
+        List<Map<String, Object>> mapList= addService.selectClientService(map.get("source"), map.get("serviceType"));
+        if (CollectionUtils.isEmpty(mapList)){
+            return new Response<>().fail().msg("还没有订阅:" + map.get("serviceType")+"，请先订阅").toString();
+        }
+        String requestId = getRequestId(map.get("calllbackIndex"), mapList);
+        if (requestId==null){
+            Map<String, Object> requestMap = addService.saveRequest(map);
+            requestId= requestMap.get("requestId").toString();
+        }else {
+            //todo 修改request
+
+        }
+
+
+        return new Response<>().success().toString();
+    }
+
+
+
 
 }

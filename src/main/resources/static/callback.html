@@ -50,9 +50,11 @@
        function submits() {
            var result = inputVailed();
            if (!result.ok){
+               document.getElementById("finalResult").value = result.name + "不能为空!";
                alert(result.name + "不能为空!");
                return;
             }
+           document.getElementById("finalResult").value = "";
            loadData("","POST",buildData(),function (resp) {
                if (resp.success){
                    document.getElementById("finalResult").value = resp.data;
@@ -95,7 +97,7 @@
                "calllbackIndex": document.getElementById("calllbackIndex").value,
                "serviceType": document.getElementById("serviceType").value,
                "source": document.getElementById("source").value,
-               "id": document.getElementById("id").value,
+               "requestId": document.getElementById("id").value,
                "url": document.getElementById("url").value,
                "method": document.getElementById("method").value,
                "header": document.getElementById("header").value,
@@ -174,12 +176,18 @@
                "serviceType": document.getElementById("serviceType").value,
                "source": document.getElementById("source").value
            };
+           if (data.source==null||data.source==""){
+               document.getElementById("finalResult").value = "渠道号source不能为空";
+               alert("渠道号source不能为空");
+               return;
+           }
+           document.getElementById("finalResult").value = "";
            loadData("http://localhost:8080/service/selectServiceCallback", "POST", JSON.stringify(data), function (resp) {
                if (resp.success) {
                    document.getElementById("id").value = resp.data.id;
                    document.getElementById("url").value = resp.data.url;
-                   document.getElementById("params").value = resp.data.params;
                    document.getElementById("header").value =resp.data.header;
+                   document.getElementById("params").value = resp.data.params;
                    var options = document.getElementById("method").options;
                    for (i = 0; i < options.length; i++)
                        if (options[i].value == resp.data.method){
@@ -190,16 +198,13 @@
                } else {
                    document.getElementById("id").value = null;
                    document.getElementById("url").value = null;
-                   document.getElementById("params").value = "";
                    document.getElementById("header").value =null;
+                   document.getElementById("params").value = "";
                    document.getElementById("resultParseTemplate").value =null;
                    document.getElementById("finalResult").value = JSON.stringify(resp.message);
                }
            })
        }
-
-
-
     </script>
 </head>
 

@@ -148,4 +148,17 @@
     <select id ="selectClientService"  resultType="java.util.Map">
         select * from  client_service  where source = #{source} and service_type=#{serviceType} and state = 'normal'
     </select>
+
+    <update id="" >
+        update request
+        <set>
+        <if test="">
+
+        </if>
+
+
+
+        </set>
+        where id = #{requestId}
+    </update>
 </mapper>
