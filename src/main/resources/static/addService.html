@@ -169,6 +169,10 @@
             document.getElementsByName("serviceFormatType")[0].value='synchronize_api';
         }
 
+       function defaultHeader() {
+           document.getElementsByName("header")[0].value='{"Content-Type":"application/json"}';
+       }
+
        function copyMessage() {
            document.getElementById("finalResult").select();
            document.execCommand("Copy");
@@ -233,7 +237,10 @@
             </tr>
             <tr>
                 <td>请求头(header):</td>
-                <td> <input type="text" name="header" required="required"/></td>
+                <td>
+                    <input type="text" name="header" required="required"/>
+                    <button type="button" onclick="defaultHeader()" class="add">默认配置</button>
+                </td>
             </tr>
             <tr>
                 <td>请求参数(params):</td>

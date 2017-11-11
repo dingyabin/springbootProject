@@ -1,13 +1,10 @@
 package net.wecash.dingyabin.controller;
 
-import com.google.common.base.Strings;
 import net.wecash.dingyabin.services.AddService;
 import lombok.extern.slf4j.Slf4j;
 import net.wecash.web.Response;
 import net.wecash.web.exception.BaseBusinessException;
 import net.wecash.web.filter.ReadableHttpServletRequestWrapper;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import static net.wecash.dingyabin.util.ManyUtil.assertNotNull;
+import static net.wecash.dingyabin.util.ManyUtil.isLegalId;
 import static net.wecash.utils.WebUtils.genParamMap;
 
 /**
@@ -71,6 +70,8 @@ public class AddServiceController {
     public String selectServiceCallback(HttpServletRequest req) throws IOException {
         ReadableHttpServletRequestWrapper requestWrapper = new ReadableHttpServletRequestWrapper(req);
         Map<String, String> map = genParamMap(requestWrapper.getWrappedParams(), requestWrapper.getWrappedJson());
+        //校验参数
+        assertNotNull(map);
 
         List<Map<String, Object>> mapList= addService.selectClientService(map.get("source"), map.get("serviceType"));
         if (CollectionUtils.isEmpty(mapList)){
@@ -92,29 +93,5 @@ public class AddServiceController {
         }
         return new Response<>().fail().msg("还没有配置第" + map.get("calllbackIndex")+"次回调").toString();
     }
-
-
-
-
-
-
-
-    private void assertNotNull( Map<String, String> map ,String ... nullAbleFilds){
-        map.forEach((k,v)->{
-            if (!ArrayUtils.contains(nullAbleFilds, k) && StringUtils.isBlank(v)) {
-                throw new BaseBusinessException("E000001",k+"不能为空！");
-            }
-        });
-    }
-
-
-    private boolean isLegalId(Object id) {
-        if (id == null) {
-            return false;
-        }
-        String idStr = id.toString();
-        return !Strings.isNullOrEmpty(idStr) && Long.parseLong(idStr) > 0;
-    }
-
 
 }

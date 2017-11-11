@@ -48,7 +48,7 @@
     <script type="application/javascript" language="JavaScript">
 
        function submits() {
-           var result = inputVailed(document.getElementsByTagName("input"));
+           var result = inputVailed();
            if (!result.ok){
                alert(result.name + "不能为空!");
                return;
@@ -64,11 +64,16 @@
 
 
 
-       function inputVailed(inputs) {
+       function inputVailed() {
+          var inputs= document.getElementsByTagName("input")
            for (var i = 0; i < inputs.length; i++) {
                if (inputs[i].required && (inputs[i].value == null || inputs[i].value == "")) {
-                   return {"ok": false, "name": inputs[i].name};
+                   return {"ok": false, "name": inputs[i].id};
                }
+           }
+           var params = document.getElementById("params");
+           if (params.value == null || params.value == "") {
+               return {"ok": false, "name": params.id};
            }
            return {"ok": true};
        }
@@ -86,27 +91,16 @@
                    "success": codeInfoData[3].value
                });
            }
-
-           var paramInfos = [];
-           var paramInfoDivs = document.getElementsByName("paramInfo");
-           for (var j = 0; j < paramInfoDivs.length; j++) {
-               var paramData = paramInfoDivs[j].children;
-               paramInfos.push({
-                   "crawlerParam": paramData[0].value,
-                   "platParam": paramData[1].value
-               });
-           }
-
            var serviceObj = {
-               "serviceName": document.getElementsByName("serviceName")[0].value,
-               "serviceType": document.getElementsByName("serviceType")[0].value,
-               "serviceDescription": document.getElementsByName("serviceDescription")[0].value,
-               "serviceFormatType": document.getElementsByName("serviceFormatType")[0].value,
-               "url": document.getElementsByName("url")[0].value,
-               "method": document.getElementsByName("method")[0].value,
-               "header": document.getElementsByName("header")[0].value,
-               "params": paramInfos,
-               "resultParseTemplate": document.getElementsByName("resultParseTemplate")[0].value,
+               "calllbackIndex": document.getElementById("calllbackIndex").value,
+               "serviceType": document.getElementById("serviceType").value,
+               "source": document.getElementById("source").value,
+               "id": document.getElementById("id").value,
+               "url": document.getElementById("url").value,
+               "method": document.getElementById("method").value,
+               "header": document.getElementById("header").value,
+               "params": document.getElementById("params").value,
+               "resultParseTemplate": document.getElementById("resultParseTemplate").value,
                "codeInfo": codeInfos
            };
            return JSON.stringify(serviceObj);
@@ -155,6 +149,11 @@
             document.getElementById("resultParseTemplate").value='{"type": "JSONObject","code": "code","data": ""}';
         }
 
+
+       function defaultHeader() {
+           document.getElementById("header").value='{"Content-Type":"application/json"}';
+       }
+
        function copyMessage() {
            document.getElementById("finalResult").select();
            document.execCommand("Copy");
@@ -177,8 +176,9 @@
            };
            loadData("http://localhost:8080/service/selectServiceCallback", "POST", JSON.stringify(data), function (resp) {
                if (resp.success) {
+                   document.getElementById("id").value = resp.data.id;
                    document.getElementById("url").value = resp.data.url;
-                   document.getElementById("params").innerHTML = resp.data.params;
+                   document.getElementById("params").value = resp.data.params;
                    document.getElementById("header").value =resp.data.header;
                    var options = document.getElementById("method").options;
                    for (i = 0; i < options.length; i++)
@@ -188,16 +188,15 @@
                    document.getElementById("resultParseTemplate").value =resp.data.result_parse_template;
                    document.getElementById("finalResult").value = JSON.stringify(resp);
                } else {
+                   document.getElementById("id").value = null;
                    document.getElementById("url").value = null;
-                   document.getElementById("params").innerHTML = "";
+                   document.getElementById("params").value = "";
                    document.getElementById("header").value =null;
                    document.getElementById("resultParseTemplate").value =null;
                    document.getElementById("finalResult").value = JSON.stringify(resp.message);
                }
            })
        }
-
-
 
 
 
@@ -246,6 +245,10 @@
                 <td> <input type="text" id="source" required="required"/></td>
             </tr>
             <tr>
+                <td>回调id:</td>
+                <td><input type="text" id="id"/></td>
+            </tr>
+            <tr>
                 <td>回调地址(url):</td>
                 <td><input type="text" id="url" required="required"/></td>
             </tr>
@@ -260,7 +263,10 @@
             </tr>
             <tr>
                 <td>请求头(header):</td>
-                <td> <input type="text" id="header" required="required"/></td>
+                <td>
+                    <input type="text" id="header" required="required"/>
+                    <button type="button" onclick="defaultHeader()" class="add">默认配置</button>
+                </td>
             </tr>
             <tr>
                 <td>请求参数(params):</td>
