@@ -68,6 +68,6 @@ public interface AddServiceDao {
         * @param serviceType serviceType
         * @return
         */
-       Map<String, Object> selectClientService(@Param("source") Long source, @Param("serviceType") String serviceType);
+       List<Map<String, Object>> selectClientService(@Param("source") Long source, @Param("serviceType") String serviceType);
 
 }

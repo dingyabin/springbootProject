@@ -2,6 +2,7 @@ package net.wecash.dingyabin.services;
 
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,12 +26,12 @@ public interface AddService {
 
 
     /**
-     * 根据RequestId查找Request
+     * 根据serviceType,serviceType查找ClientService,
      * @param source source
      * @param serviceType serviceType
      * @return
      */
-    Map<String, Object> selectClientService(String source,String serviceType);
+    List<Map<String, Object>> selectClientService(String source, String serviceType);
 
     void saveService(Map<String, String> map);
 

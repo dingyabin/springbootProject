@@ -45,11 +45,11 @@ public class AddServiceImpl implements AddService {
 
 
     @Override
-    public Map<String, Object> selectClientService(String source,String serviceType) {
+    public List<Map<String, Object>> selectClientService(String source, String serviceType) {
         if (StringUtils.isBlank(source) || StringUtils.isBlank(serviceType)) {
             return null;
         }
-        return addServiceDao.selectClientService(Long.valueOf(source),serviceType);
+        return addServiceDao.selectClientService(Long.valueOf(source), serviceType);
     }
 
 

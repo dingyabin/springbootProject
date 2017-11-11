@@ -1,5 +1,6 @@
 package net.wecash.dingyabin.controller;
 
+import com.google.common.base.Strings;
 import net.wecash.dingyabin.services.AddService;
 import lombok.extern.slf4j.Slf4j;
 import net.wecash.web.Response;
@@ -14,7 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static net.wecash.utils.WebUtils.genParamMap;
 
@@ -64,6 +67,38 @@ public class AddServiceController {
 
 
 
+    @RequestMapping("/selectServiceCallback")
+    public String selectServiceCallback(HttpServletRequest req) throws IOException {
+        ReadableHttpServletRequestWrapper requestWrapper = new ReadableHttpServletRequestWrapper(req);
+        Map<String, String> map = genParamMap(requestWrapper.getWrappedParams(), requestWrapper.getWrappedJson());
+
+        List<Map<String, Object>> mapList= addService.selectClientService(map.get("source"), map.get("serviceType"));
+        if (CollectionUtils.isEmpty(mapList)){
+            return new Response<>().fail().msg("还没有订阅:" + map.get("serviceType")+"，请先订阅").toString();
+        }
+        String requestId = null;
+        for (Map<String, Object> clientservivce : mapList) {
+            if (Objects.equals("1", map.get("calllbackIndex")) && isLegalId(clientservivce.get("login_request_id"))) {
+                requestId = clientservivce.get("login_request_id").toString();
+                break;
+            } else if (Objects.equals("2", map.get("calllbackIndex")) && isLegalId(clientservivce.get("request_id"))) {
+                requestId = clientservivce.get("request_id").toString();
+                break;
+            }
+        }
+        if (requestId != null) {
+            Map<String, Object> request = addService.selectRequestById(requestId);
+            return new Response<>().success().data(request).toString();
+        }
+        return new Response<>().fail().msg("还没有配置第" + map.get("calllbackIndex")+"次回调").toString();
+    }
+
+
+
+
+
+
+
     private void assertNotNull( Map<String, String> map ,String ... nullAbleFilds){
         map.forEach((k,v)->{
             if (!ArrayUtils.contains(nullAbleFilds, k) && StringUtils.isBlank(v)) {
@@ -71,5 +106,15 @@ public class AddServiceController {
             }
         });
     }
+
+
+    private boolean isLegalId(Object id) {
+        if (id == null) {
+            return false;
+        }
+        String idStr = id.toString();
+        return !Strings.isNullOrEmpty(idStr) && Long.parseLong(idStr) > 0;
+    }
+
 
 }

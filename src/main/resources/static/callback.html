@@ -31,12 +31,8 @@
             height: 30px;
             border-color:#4A90E2 #4A90E2;
         }
-        .paramsInput{
+        textarea{
             font-family: Consolas,serif;
-        }
-        #tip{
-            color: red;
-            font-size: 0.8em;
         }
         .check{
             padding: 2px 5px 2px 5px;
@@ -50,12 +46,6 @@
 
 
     <script type="application/javascript" language="JavaScript">
-
-        function initConfig() {
-            document.getElementById("params").readOnly=false;
-            document.getElementById("params").innerHTML = '{"customerId": "${client_customer_id}","serviceType": "${service_type}","authView": "1","itemList": [{"grantConfigCode": "account","grantAttributeValue": "${account}"}]}';
-            document.getElementById("tip").innerHTML='可对配置进行修改';
-        }
 
        function submits() {
            var result = inputVailed(document.getElementsByTagName("input"));
@@ -170,13 +160,11 @@
            document.execCommand("Copy");
        }
 
-       function defaultParam(obj) {
-           if (obj.value == 1) {
-               initConfig();
+       function defaultParam() {
+           if (document.getElementById("calllbackIndex").value == 1) {
+               document.getElementById("params").value = '{"customerId": "${client_customer_id}","serviceType": "${service_type}","authView": "1","itemList": [{"grantConfigCode": "account","grantAttributeValue": "${account}"}]}';
            } else {
-               document.getElementById("params").innerHTML = '{"service_type":"${service_type}","signature":"${signature}","client_customer_id":"${client_customer_id}","source":"${source}","state":"${state}","account":"${account}","token":"${token}","timestamp":"${timestamp}"}';
-               document.getElementById("params").readOnly=true;
-               document.getElementById("tip").innerHTML='不可修改';
+               document.getElementById("params").value = '{"service_type":"${service_type}","signature":"${signature}","client_customer_id":"${client_customer_id}","source":"${source}","state":"${state}","account":"${account}","token":"${token}","timestamp":"${timestamp}"}';
            }
        }
 
@@ -187,20 +175,37 @@
                "serviceType": document.getElementById("serviceType").value,
                "source": document.getElementById("source").value
            };
-           loadData("", "POST", JSON.stringify(data), function (resp) {
+           loadData("http://localhost:8080/service/selectServiceCallback", "POST", JSON.stringify(data), function (resp) {
                if (resp.success) {
-                   document.getElementById("finalResult").value = resp.data;
+                   document.getElementById("url").value = resp.data.url;
+                   document.getElementById("params").innerHTML = resp.data.params;
+                   document.getElementById("header").value =resp.data.header;
+                   var options = document.getElementById("method").options;
+                   for (i = 0; i < options.length; i++)
+                       if (options[i].value == resp.data.method){
+                           options[i].selected = true;
+                       }
+                   document.getElementById("resultParseTemplate").value =resp.data.result_parse_template;
+                   document.getElementById("finalResult").value = JSON.stringify(resp);
                } else {
-                   document.getElementById("finalResult").value = resp.message;
+                   document.getElementById("url").value = null;
+                   document.getElementById("params").innerHTML = "";
+                   document.getElementById("header").value =null;
+                   document.getElementById("resultParseTemplate").value =null;
+                   document.getElementById("finalResult").value = JSON.stringify(resp.message);
                }
            })
        }
+
+
+
+
 
     </script>
 </head>
 
 
- <body onload="initConfig()">
+ <body>
     <center><h3>配置回调</h3></center>
 
     <form id="serviceTable">
@@ -208,7 +213,7 @@
             <tr>
                 <td>第几次回调:</td>
                 <td>
-                    <select id="calllbackIndex" style="width:90px" onchange="defaultParam(this)">
+                    <select id="calllbackIndex" style="width:90px">
                         <option value="1">1</option>
                         <option value="2">2</option>
                     </select>
@@ -260,7 +265,8 @@
             <tr>
                 <td>请求参数(params):</td>
                 <td>
-                    <textarea rows="8" cols="70" id="params" required="required" class="paramsInput"></textarea><span id="tip"></span>
+                    <textarea rows="8" cols="70" id="params" required="required"></textarea>
+                    <button type="button" onclick="defaultParam()" class="add">默认配置</button>
                 </td>
             </tr>
             <tr>

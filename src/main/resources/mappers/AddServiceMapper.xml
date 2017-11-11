@@ -146,6 +146,6 @@
     </select>
 
     <select id ="selectClientService"  resultType="java.util.Map">
-        select * from  client_service  where source = #{source} and service_type=#{serviceType}
+        select * from  client_service  where source = #{source} and service_type=#{serviceType} and state = 'normal'
     </select>
 </mapper>
