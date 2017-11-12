@@ -149,16 +149,43 @@
         select * from  client_service  where source = #{source} and service_type=#{serviceType} and state = 'normal'
     </select>
 
-    <update id="" >
+
+    <update id="updateRequestById" parameterType="java.util.Map">
         update request
         <set>
-        <if test="">
-
-        </if>
-
-
-
+            <if test="url != null">
+                url=  #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="method != null">
+                method=  #{method,jdbcType=VARCHAR},
+            </if>
+            <if test="header != null">
+                header=  #{header,jdbcType=VARCHAR},
+            </if>
+            <if test="params != null">
+                params=  #{params,jdbcType=VARCHAR},
+            </if>
+            <if test="resultParseTemplate != null">
+                result_parse_template=  #{resultParseTemplate,jdbcType=VARCHAR},
+            </if>
         </set>
         where id = #{requestId}
+    </update>
+
+
+
+    <update id="updateClientServivce" parameterType="java.util.Map">
+        update client_service
+        <set>
+            <if test="calllbackIndex == '1'.toString()">
+                login_request_id=  #{requestId},
+            </if>
+            <if test="calllbackIndex == '2'.toString()">
+                request_id=  #{requestId},
+            </if>
+        </set>
+        WHERE source = #{source}
+        AND service_type = #{serviceType}
+        AND state = 'normal'
     </update>
 </mapper>

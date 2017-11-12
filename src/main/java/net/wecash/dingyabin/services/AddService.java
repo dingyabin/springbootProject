@@ -33,15 +33,41 @@ public interface AddService {
      */
     List<Map<String, Object>> selectClientService(String source, String serviceType);
 
+
+    /**
+     * 修改request
+     * @param map map
+     * @return int
+     */
+    int updateRequestById(Map<String, String> map);
+
+
+    /**
+     * 修改ClientServivce的回调id
+     * @param map map
+     * @return int
+     */
+    int updateClientServivce(Map<String, String> map);
+
+    /**
+     * 保存service
+     * @param map map
+     */
+
     void saveService(Map<String, String> map);
+
 
     void saveServiceDataFormat(Map<String, String> map);
 
+
     Map<String, Object> saveRequest(Map<String, String> map);
+
 
     void saveCodeDict(Map<String, String> map);
 
+
     String buildSQL(Map<String, String> map) throws IOException;
+
 
 
 }

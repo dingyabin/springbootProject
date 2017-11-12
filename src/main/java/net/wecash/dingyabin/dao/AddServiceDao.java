@@ -70,4 +70,19 @@ public interface AddServiceDao {
         */
        List<Map<String, Object>> selectClientService(@Param("source") Long source, @Param("serviceType") String serviceType);
 
+       /**
+        * 修改request
+        * @param map map
+        * @return int
+        */
+       int updateRequestById(Map<String, String> map);
+
+
+       /**
+        * 修改ClientServivce的回调id
+        * @param map map
+        * @return int
+        */
+       int updateClientServivce(Map<String, String> map);
+
 }

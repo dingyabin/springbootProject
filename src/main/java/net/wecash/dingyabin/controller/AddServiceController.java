@@ -115,29 +115,35 @@ public class AddServiceController {
         ReadableHttpServletRequestWrapper requestWrapper = new ReadableHttpServletRequestWrapper(req);
         Map<String, String> map = genParamMap(requestWrapper.getWrappedParams(), requestWrapper.getWrappedJson());
         //校验参数
-        assertNotNull(map,"resultParseTemplate", "codeInfo","id");
-        if (!Strings.isNullOrEmpty(map.get("id"))){
-            //todo 修改request
-            return "";
+        assertNotNull(map,"resultParseTemplate", "codeInfo","requestId");
+
+        //有requestid，修改request
+        if (!Strings.isNullOrEmpty(map.get("requestId"))){
+            addService.updateRequestById(map);
+            return new Response<>().success().data(map).toString();
         }
-        List<Map<String, Object>> mapList= addService.selectClientService(map.get("source"), map.get("serviceType"));
-        if (CollectionUtils.isEmpty(mapList)){
+
+        //无requestid，查找ClientService
+        List<Map<String, Object>> clientServiceList= addService.selectClientService(map.get("source"), map.get("serviceType"));
+        if (CollectionUtils.isEmpty(clientServiceList)){
             return new Response<>().fail().msg("还没有订阅:" + map.get("serviceType")+"，请先订阅").toString();
         }
-        String requestId = getRequestId(map.get("calllbackIndex"), mapList);
-        if (requestId==null){
+
+        //根据查找到的ClientService,查找回调Id
+        String requestId = getRequestId(map.get("calllbackIndex"), clientServiceList);
+
+        //requestId=null，插入新的request，并拿到新插入的request的id，将其设置到ClientServivce里
+        if (requestId == null) {
             Map<String, Object> requestMap = addService.saveRequest(map);
-            requestId= requestMap.get("requestId").toString();
+            map.put("requestId", requestMap.get("requestId").toString());
+            addService.updateClientServivce(map);
+            return new Response<>().success().data(requestMap).toString();
+            //requestId！=null,直接根据requestId修改request
         }else {
-            //todo 修改request
-
+            map.put("requestId", requestId);
+            addService.updateRequestById(map);
+            return new Response<>().success().data(map).toString();
         }
-
-
-        return new Response<>().success().toString();
     }
-
-
-
 
 }

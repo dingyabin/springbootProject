@@ -54,6 +54,18 @@ public class AddServiceImpl implements AddService {
 
 
     @Override
+    public int updateRequestById(Map<String, String> map) {
+        return addServiceDao.updateRequestById(map);
+    }
+
+
+    @Override
+    public int updateClientServivce(Map<String, String> map) {
+        return addServiceDao.updateClientServivce(map);
+    }
+
+
+    @Override
     public void saveService(Map<String, String> map) {
         HashMap<String, Object> serviceMap = Maps.newHashMap();
         serviceMap.put("serviceName", map.get("serviceName"));
@@ -79,13 +91,19 @@ public class AddServiceImpl implements AddService {
         requestMap.put("url", map.get("url"));
         requestMap.put("method", map.get("method"));
         requestMap.put("header", map.get("header"));
-        JSONArray arrays = JSONObject.parseArray(Optional.ofNullable(map.get("params")).orElse("[]"));
-        Map<String, String> paramMap = Maps.newHashMap();
-        for (int i = 0; i < arrays.size(); i++) {
-            JSONObject jsonObject = arrays.getJSONObject(i);
-            paramMap.put(jsonObject.getString("crawlerParam"), jsonObject.getString("platParam"));
+        //爬虫的request
+        if (map.get("calllbackIndex") == null) {
+            JSONArray arrays = JSONObject.parseArray(Optional.ofNullable(map.get("params")).orElse("[]"));
+            Map<String, String> paramMap = Maps.newHashMap();
+            for (int i = 0; i < arrays.size(); i++) {
+                JSONObject jsonObject = arrays.getJSONObject(i);
+                paramMap.put(jsonObject.getString("crawlerParam"), jsonObject.getString("platParam"));
+            }
+            requestMap.put("params", GsonUtils.toJson(paramMap));
+            //回调的request
+        }else {
+            requestMap.put("params", map.get("params"));
         }
-        requestMap.put("params", GsonUtils.toJson(paramMap));
         if (StringUtils.isNotBlank(map.get("resultParseTemplate"))) {
             requestMap.put("resultParseTemplate", map.get("resultParseTemplate"));
         }
