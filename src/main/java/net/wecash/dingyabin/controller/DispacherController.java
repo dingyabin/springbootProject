@@ -11,7 +11,7 @@ public class DispacherController {
 
     @RequestMapping("/")
     public String index(){
-        return "forward:/addService.html";
+        return "forward:/homepage.html";
     }
 
 

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>后台服务</title>
+    <style type="text/css">
+        body {
+            font-family: 微软雅黑, serif;
+            background-color: mediumturquoise;
+        }
+
+        .container {
+            width: 500px;
+            height: 250px;
+            display: table;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            -webkit-transform: translateX(-50%) translateY(-50%);
+        }
+
+        .addServicve {
+            display: table-cell;
+            background-color: #4A90E2;
+            /*text-align: center;*/
+            /*vertical-align: middle;*/
+            cursor: pointer;
+        }
+
+        .callbackConfig {
+            display: table-cell;
+            background-color: hotpink;
+            text-align: center;
+            vertical-align: middle;
+            cursor: pointer;
+        }
+    </style>
+
+    <script type="application/javascript" language="JavaScript">
+        function go(url) {
+            window.open(url);
+        }
+    </script>
+</head>
+
+
+<body>
+
+
+<div class="container">
+    <div class="addServicve" onclick="go('addService.html')"><span>添加服务</span></div>
+    <div class="callbackConfig" onclick="go('callback.html')"><span>配置回调</span></div>
+</div>
+</body>
+</html>
