@@ -65,6 +65,9 @@
                alert(result.name + "不能为空!");
                return;
             }
+           if (!confirm("确认提交?")) {
+               return;
+           }
            loadDoc(buildData());
        }
 
