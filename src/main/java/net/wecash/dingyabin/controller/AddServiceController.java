@@ -134,10 +134,9 @@ public class AddServiceController {
 
         //requestId=null，插入新的request，并拿到新插入的request的id，将其设置到ClientServivce里
         if (requestId == null) {
-            Map<String, Object> requestMap = addService.saveRequest(map);
-            map.put("requestId", requestMap.get("requestId").toString());
+            map.put("requestId", addService.saveRequest(map).get("requestId").toString());
             addService.updateClientServivce(map);
-            return new Response<>().success().data(requestMap).toString();
+            return new Response<>().success().data(map).toString();
             //requestId！=null,直接根据requestId修改request
         }else {
             map.put("requestId", requestId);

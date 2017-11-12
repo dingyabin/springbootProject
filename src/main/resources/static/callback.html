@@ -55,11 +55,10 @@
                return;
             }
            document.getElementById("finalResult").value = "";
-           loadData("","POST",buildData(),function (resp) {
+           loadData("http://localhost:8080/service/updateCallback","POST",buildData(),function (resp) {
+               document.getElementById("finalResult").value = JSON.stringify(resp);
                if (resp.success){
-                   document.getElementById("finalResult").value = resp.data;
-               }else {
-                   document.getElementById("finalResult").value = resp.message;
+                   document.getElementById("id").value = resp.data.id;
                }
            });
        }
@@ -189,20 +188,20 @@
                    document.getElementById("header").value =resp.data.header;
                    document.getElementById("params").value = resp.data.params;
                    var options = document.getElementById("method").options;
-                   for (i = 0; i < options.length; i++)
+                   for (var i = 0; i < options.length; i++)
                        if (options[i].value == resp.data.method){
                            options[i].selected = true;
                        }
-                   document.getElementById("resultParseTemplate").value =resp.data.result_parse_template;
-                   document.getElementById("finalResult").value = JSON.stringify(resp);
+                   var resultParseTemplate = resp.data.result_parse_template;
+                   document.getElementById("resultParseTemplate").value = typeof(resultParseTemplate) == "undefined" ? null : resultParseTemplate;
                } else {
                    document.getElementById("id").value = null;
                    document.getElementById("url").value = null;
                    document.getElementById("header").value =null;
                    document.getElementById("params").value = "";
                    document.getElementById("resultParseTemplate").value =null;
-                   document.getElementById("finalResult").value = JSON.stringify(resp.message);
                }
+               document.getElementById("finalResult").value =JSON.stringify(resp);
            })
        }
     </script>
@@ -251,7 +250,7 @@
             </tr>
             <tr>
                 <td>回调id:</td>
-                <td><input type="text" id="id"/></td>
+                <td><input type="text" id="id" readonly="readonly"/></td>
             </tr>
             <tr>
                 <td>回调地址(url):</td>
@@ -314,7 +313,7 @@
                 <td colspan="2">
                     <center>
                         <button type="button" onclick="query()" class="check">检查是否已配置</button>
-                        <button type="button" onclick="submits()" class="add">提交</button>
+                        <button type="button" onclick="submits()" class="del">提交</button>
                         <button type="button" onclick="copyMessage()" class="add">复制结果</button>
                     </center>
                 </td>
