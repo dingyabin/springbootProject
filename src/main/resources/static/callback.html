@@ -58,7 +58,7 @@
            loadData("http://localhost:8080/service/updateCallback","POST",buildData(),function (resp) {
                document.getElementById("finalResult").value = JSON.stringify(resp);
                if (resp.success){
-                   document.getElementById("id").value = resp.data.id;
+                   document.getElementById("id").value = resp.data.requestId;
                }
            });
        }
