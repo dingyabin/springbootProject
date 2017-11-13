@@ -157,7 +157,7 @@ public class AddServiceController {
 
         //重置密码
         addService.resetPwd(map.get("source"), map.get("username"));
-        return  new Response<>().success().data(map).toString();
+        return  new Response<>().success().data(map).msg("修改成功,新密码: 123456").toString();
     }
 
 }

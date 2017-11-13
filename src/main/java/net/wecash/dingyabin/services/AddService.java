@@ -63,12 +63,27 @@ public interface AddService {
     Map<String, Object> saveRequest(Map<String, String> map);
 
 
+    /**
+     *
+     * @param map
+     */
     void saveCodeDict(Map<String, String> map);
 
 
+    /**
+     * 生成sql语句
+     * @param map
+     * @return sql语句
+     * @throws IOException
+     */
     String buildSQL(Map<String, String> map) throws IOException;
 
 
+    /**
+     * 重置密码，如果找不到用户会抛异常
+     * @param source 渠道号
+     * @param username 用户名
+     */
     void resetPwd(String source,String username);
 
 
