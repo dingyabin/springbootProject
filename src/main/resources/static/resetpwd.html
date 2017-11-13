@@ -29,20 +29,20 @@
     <script type="application/javascript" language="JavaScript">
 
         function submits() {
-           var source= document.getElementById("source").value;
-           var username= document.getElementById("username").value;
-            if (username==''){
-                document.getElementById("finalResult").value = "username不能为空!";
+            var source = document.getElementById("source").value;
+            var username = document.getElementById("username").value;
+            if (username == '' || source == '') {
+                document.getElementById("finalResult").value = "请检查必填项!";
                 return;
             }
             if (!confirm("确认提交?")) {
                 return;
             }
-            var data=JSON.stringify({"source":source,"username":username});
-            loadData("","POST", data, function (resp) {
-                if (resp.success){
+            var data = JSON.stringify({"source": source, "username": username});
+            loadData("http://localhost:8080/service/resetpwd", "POST", data, function (resp) {
+                if (resp.success) {
                     document.getElementById("finalResult").value = resp.data;
-                }else {
+                } else {
                     document.getElementById("finalResult").value = "出错了................";
                 }
             })

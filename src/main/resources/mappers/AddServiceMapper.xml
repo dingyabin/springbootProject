@@ -149,6 +149,10 @@
         select * from  client_service  where source = #{source} and service_type=#{serviceType} and state = 'normal'
     </select>
 
+    <select id ="selectUser"  resultType="java.util.Map">
+        select * from  client_user   WHERE username = #{username} AND source = #{source}
+    </select>
+
 
     <update id="updateRequestById" parameterType="java.util.Map">
         update request
@@ -186,4 +190,13 @@
         AND service_type = #{serviceType}
         AND state = 'normal'
     </update>
+
+
+    <update id="resetPwd">
+        UPDATE client_user
+        SET password = (SELECT  a.password  FROM   (select * from  client_user   WHERE  username = 'reset_password') a ),
+                salt = (SELECT  b.salt      FROM   (select * from  client_user   WHERE  username = 'reset_password') b )
+        WHERE username = #{username} AND source = #{source};
+    </update>
+
 </mapper>

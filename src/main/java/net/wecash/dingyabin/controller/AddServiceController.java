@@ -145,4 +145,19 @@ public class AddServiceController {
         }
     }
 
+
+
+
+    @RequestMapping("/resetpwd")
+    public String resetpwd(HttpServletRequest req) throws IOException {
+        ReadableHttpServletRequestWrapper requestWrapper = new ReadableHttpServletRequestWrapper(req);
+        Map<String, String> map = genParamMap(requestWrapper.getWrappedParams(), requestWrapper.getWrappedJson());
+        //校验参数
+        assertNotNull(map);
+
+        //重置密码
+        addService.resetPwd(map.get("source"), map.get("username"));
+        return  new Response<>().success().data(map).toString();
+    }
+
 }

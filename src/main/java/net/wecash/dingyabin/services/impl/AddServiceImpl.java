@@ -2,11 +2,13 @@ package net.wecash.dingyabin.services.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Strings;
 import net.wecash.dingyabin.dao.AddServiceDao;
 import net.wecash.dingyabin.services.AddService;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.wecash.utils.GsonUtils;
+import net.wecash.web.exception.BaseBusinessException;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -175,4 +177,16 @@ public class AddServiceImpl implements AddService {
         return finalSQL;
     }
 
+
+    @Override
+    public void resetPwd(String source, String username) {
+        if (Strings.isNullOrEmpty(source) || Strings.isNullOrEmpty(username)) {
+            throw new BaseBusinessException("E000003", "参数缺失");
+        }
+        Map<String, Object> user = addServiceDao.selectUser(Long.parseLong(source), username);
+        if (CollectionUtils.isEmpty(user)){
+            throw new BaseBusinessException("E000004", "查无此人!");
+        }
+        addServiceDao.resetPwd(Long.parseLong(source), username);
+    }
 }

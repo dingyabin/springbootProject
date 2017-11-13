@@ -69,5 +69,7 @@ public interface AddService {
     String buildSQL(Map<String, String> map) throws IOException;
 
 
+    void resetPwd(String source,String username);
+
 
 }

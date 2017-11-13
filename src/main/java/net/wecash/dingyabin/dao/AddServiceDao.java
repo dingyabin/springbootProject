@@ -85,4 +85,22 @@ public interface AddServiceDao {
         */
        int updateClientServivce(Map<String, String> map);
 
+
+
+       /**
+        * 查找用户
+        * @param source source
+        * @param username  username
+        * @return   map
+        */
+       Map<String, Object> selectUser(@Param("source") Long source, @Param("username") String username);
+
+
+       /**
+        * 重置密码
+        * @param source source
+        * @param username  username
+        */
+       void resetPwd(@Param("source") Long source, @Param("username") String username);
+
 }
