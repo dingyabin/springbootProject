@@ -96,14 +96,8 @@ public class AddServiceImpl implements AddService {
         requestMap.put("charset", map.get("UTF-8"));
         //爬虫的request
         if (map.get("calllbackIndex") == null) {
-            JSONArray arrays = JSONObject.parseArray(Optional.ofNullable(map.get("params")).orElse("[]"));
-            Map<String, String> paramMap = Maps.newHashMap();
-            for (int i = 0; i < arrays.size(); i++) {
-                JSONObject jsonObject = arrays.getJSONObject(i);
-                paramMap.put(jsonObject.getString("crawlerParam"), jsonObject.getString("platParam"));
-            }
-            requestMap.put("params", GsonUtils.toJson(paramMap));
-            //回调的request
+            requestMap.put("params", buildRequestParams(map.get("params")));
+        //回调的request
         }else {
             requestMap.put("params", map.get("params"));
         }
@@ -126,6 +120,17 @@ public class AddServiceImpl implements AddService {
         }
     }
 
+
+
+    private String buildRequestParams(String originalParams){
+        JSONArray arrays = JSONObject.parseArray(Optional.ofNullable(originalParams).orElse("[]"));
+        Map<String, String> paramMap = Maps.newHashMap();
+        for (int i = 0; i < arrays.size(); i++) {
+            JSONObject jsonObject = arrays.getJSONObject(i);
+            paramMap.put(jsonObject.getString("crawlerParam"), jsonObject.getString("platParam"));
+        }
+        return  GsonUtils.toJson(paramMap);
+    }
 
 
 
@@ -164,7 +169,7 @@ public class AddServiceImpl implements AddService {
                                        .replaceAll("\\$\\{url\\}", maps.get("url"))
                                        .replaceAll("\\$\\{method\\}", maps.get("method"))
                                        .replaceAll("\\$\\{header\\}", maps.get("header"))
-                                       .replaceAll("\\$\\{params\\}", maps.get("params"))
+                                       .replaceAll("\\$\\{params\\}", buildRequestParams(maps.get("params")))
                                        .replaceAll("\\$\\{resultParseTemplate\\}", maps.get("resultParseTemplate") == null
                                                ? "null" : String.format("'%s'",maps.get("resultParseTemplate")));
 
