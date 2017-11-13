@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>重置密码</title>
+    <style type="text/css">
+        body {
+            font-family: 微软雅黑, serif;
+        }
+
+        .add {
+            padding: 2px 5px 2px 5px;
+            border-radius:5px;
+            border-style: none;
+            background-color: #4A90E2;
+            width: 65px;
+            height: 30px;
+        }
+
+        input {
+            width: 300px;
+            height: 25px;
+            border-color:#4A90E2 #4A90E2;
+            border-width:1px;
+            margin-bottom: 3px;
+        }
+    </style>
+
+    <script type="application/javascript" language="JavaScript">
+
+        function submits() {
+           var source= document.getElementById("source").value;
+           var username= document.getElementById("username").value;
+            if (username==''){
+                document.getElementById("finalResult").value = "username不能为空!";
+                return;
+            }
+            if (!confirm("确认提交?")) {
+                return;
+            }
+            var data=JSON.stringify({"source":source,"username":username});
+            loadData("","POST", data, function (resp) {
+                if (resp.success){
+                    document.getElementById("finalResult").value = resp.data;
+                }else {
+                    document.getElementById("finalResult").value = "出错了................";
+                }
+            })
+        }
+
+
+
+        function loadData(url, method, data, callback) {
+            var xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    var resp = JSON.parse(xmlhttp.responseText);
+                    callback(resp);
+                }
+            };
+            xmlhttp.open(method, url, true);
+            xmlhttp.setRequestHeader("Content-type", "application/json;charset=utf-8");
+            xmlhttp.send(data);
+        }
+
+    </script>
+</head>
+
+
+<body>
+                                                <center><h3>重置密码</h3></center>
+<form>
+    <table>
+        <tr>
+            <td>渠道号(source):</td>
+            <td><input type="text" id="source" required="required"/></td>
+        </tr>
+        <tr>
+            <td>用户名(username):</td>
+            <td> <input type="text" id="username" required="required"/></td>
+        </tr>
+        <tr>
+            <td>执行结果:</td>
+            <td><textarea rows="7" cols="160" id="finalResult"></textarea></td>
+        </tr>
+
+        <tr>
+            <td colspan="2">
+                <center>
+                    <button type="button" onclick="submits()" class="add">提交</button>
+                </center>
+            </td>
+        </tr>
+        </table>
+    </form>
+</body>
+</html>
