@@ -91,7 +91,7 @@
                    if (resp.success){
                        document.getElementById("finalResult").value = resp.data;
                    }else {
-                       document.getElementById("finalResult").value = "出错了................";
+                       document.getElementById("finalResult").value = resp.message;
                    }
                }
            };
