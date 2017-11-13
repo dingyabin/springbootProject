@@ -93,6 +93,7 @@ public class AddServiceImpl implements AddService {
         requestMap.put("url", map.get("url"));
         requestMap.put("method", map.get("method"));
         requestMap.put("header", map.get("header"));
+        requestMap.put("charset", map.get("UTF-8"));
         //爬虫的request
         if (map.get("calllbackIndex") == null) {
             JSONArray arrays = JSONObject.parseArray(Optional.ofNullable(map.get("params")).orElse("[]"));
@@ -159,7 +160,7 @@ public class AddServiceImpl implements AddService {
                                        .replaceAll("\\$\\{serviceType\\}", maps.get("serviceType"))
                                        .replaceAll("\\$\\{serviceDescription\\}", maps.get("serviceDescription"))
                                        .replaceAll("\\$\\{serviceFormatType\\}", maps.get("serviceFormatType"))
-                                       .replaceAll("\\$\\{requestId\\}", maps.get("requestId"))
+                                       .replaceAll("\\$\\{requestId\\}", maps.get("requestId") + "")
                                        .replaceAll("\\$\\{url\\}", maps.get("url"))
                                        .replaceAll("\\$\\{method\\}", maps.get("method"))
                                        .replaceAll("\\$\\{header\\}", maps.get("header"))

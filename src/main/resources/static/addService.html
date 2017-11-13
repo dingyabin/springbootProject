@@ -59,7 +59,7 @@
 
     <script type="application/javascript" language="JavaScript">
 
-       function submits() {
+       function submits(onlySQL) {
            var result = inputVailed(document.getElementsByTagName("input"));
            if (!result.ok){
                alert(result.name + "不能为空!");
@@ -68,7 +68,7 @@
            if (!confirm("确认提交?")) {
                return;
            }
-           loadDoc(buildData());
+           loadDoc(buildData(onlySQL));
        }
 
 
@@ -101,7 +101,7 @@
        }
 
 
-       function buildData() {
+       function buildData(onlySQL) {
            var codeInfos = [];
            var codeInfoDivs = document.getElementsByName("codeInfo");
            for (var i = 0; i < codeInfoDivs.length; i++) {
@@ -125,6 +125,7 @@
            }
 
            var serviceObj = {
+               "onlySQL": onlySQL,
                "serviceName": document.getElementsByName("serviceName")[0].value,
                "serviceType": document.getElementsByName("serviceType")[0].value,
                "serviceDescription": document.getElementsByName("serviceDescription")[0].value,
@@ -290,7 +291,8 @@
             <tr>
                 <td colspan="2">
                     <center>
-                        <button type="button" onclick="submits()" class="add">提交</button>
+                        <button type="button" onclick="submits(false)" class="add">提交</button>
+                        <button type="button" onclick="submits(true)" class="delchar">我只要SQL</button>
                         <button type="button" onclick="copyMessage()" class="add">复制结果</button>
                     </center>
                 </td>

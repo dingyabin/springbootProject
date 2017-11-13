@@ -36,27 +36,30 @@ public class AddServiceController {
     public String addService(HttpServletRequest request) throws IOException {
         ReadableHttpServletRequestWrapper requestWrapper = new ReadableHttpServletRequestWrapper(request);
         Map<String, String> paramMap = genParamMap(requestWrapper.getWrappedParams(), requestWrapper.getWrappedJson());
+
         //校验参数
         assertNotNull(paramMap, "resultParseTemplate", "codeInfo");
 
-        //校验服务是否已经存在
-        Map<String, Object> service= addService.selectByServiceType(paramMap.get("serviceType"));
-        if (!CollectionUtils.isEmpty(service)){
-            throw new BaseBusinessException("E000003", paramMap.get("serviceType") + "服务已经存在");
+        if (!Strings.isNullOrEmpty(paramMap.get("onlySQL")) && !Boolean.valueOf(paramMap.get("onlySQL"))) {
+            //校验服务是否已经存在
+            Map<String, Object> service = addService.selectByServiceType(paramMap.get("serviceType"));
+            if (!CollectionUtils.isEmpty(service)) {
+                throw new BaseBusinessException("E000003", paramMap.get("serviceType") + "服务已经存在");
+            }
+
+            //插入service
+            addService.saveService(paramMap);
+
+            //插入Request并返回id
+            Map<String, Object> map = addService.saveRequest(paramMap);
+            paramMap.put("requestId", map.get("requestId").toString());
+
+            //插入ServiceDataFormat
+            addService.saveServiceDataFormat(paramMap);
+
+            //插入CodeDict
+            addService.saveCodeDict(paramMap);
         }
-
-        //插入service
-        addService.saveService(paramMap);
-
-        //插入Request并返回id
-        Map<String, Object> map = addService.saveRequest(paramMap);
-        paramMap.put("requestId", map.get("requestId").toString());
-
-        //插入ServiceDataFormat
-        addService.saveServiceDataFormat(paramMap);
-
-        //插入CodeDict
-        addService.saveCodeDict(paramMap);
 
         //打印sql
         String sql = addService.buildSQL(paramMap);
