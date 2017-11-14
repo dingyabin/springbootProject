@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>订阅权限</title>
+    <style type="text/css">
+        body {
+            font-family: 微软雅黑, serif;
+        }
+
+        input {
+            width: 300px;
+            height: 25px;
+            border-color:#4A90E2 #4A90E2;
+            border-width:1px;
+            margin-bottom: 3px;
+        }
+
+        .add {
+            padding: 2px 5px 2px 5px;
+            border-radius:5px;
+            border-style: none;
+            background-color: #4A90E2;
+            width: 65px;
+            height: 30px;
+        }
+        .newtd{
+            background-color: #4A90E2;
+            height: 60px;
+            text-align:left;
+        }
+    </style>
+
+    <script type="application/javascript" language="JavaScript">
+        function submits() {
+            var source = document.getElementById("source").value;
+            if (source == '') {
+                alert( "请检查必填项!");
+                return;
+            }
+            var data = JSON.stringify({"source": source});
+            loadData("http://localhost:8080/service/resetpwd", "POST", data, function (resp) {
+                if (resp.success) {
+                    document.getElementById("finalResult").value = resp.data;
+                } else {
+                    document.getElementById("finalResult").value = resp.message;
+                }
+            })
+        }
+
+        function loadData(url, method, data, callback) {
+            var xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    var resp = JSON.parse(xmlhttp.responseText);
+                    callback(resp);
+                }
+            };
+            xmlhttp.open(method, url, true);
+            xmlhttp.setRequestHeader("Content-type", "application/json;charset=utf-8");
+            xmlhttp.send(data);
+        }
+
+
+        function add() {
+            var cellWidth=220;
+            window.cellNum = typeof(window.cellNum) == 'undefined' ? (document.body.scrollWidth - 40) / cellWidth : window.cellNum;
+            var table = document.getElementById("list");
+            for (var i = 0; i < 4; i++) {
+                var newrow = table.insertRow(-1);
+                for (var j = 0; j <  window.cellNum; j++) {
+                    var newcol = newrow.insertCell(-1);
+
+                    var checkBox=document.createElement("input");
+                    checkBox.setAttribute("type","checkbox");
+                    checkBox.setAttribute("name","weqweqwe");
+                    newcol.appendChild(checkBox);
+                    newcol.appendChild(document.createTextNode("4232"));
+                    newcol.setAttribute('class','newtd');
+                    newcol.setAttribute('style', 'width:' + cellWidth + 'px');
+                }
+            }
+        }
+
+    </script>
+</head>
+
+
+<body>
+                                                <center><h3>订阅权限</h3></center>
+<form>
+    <table>
+        <tr>
+            <td>渠道号(source):</td>
+            <td><input id="source"/></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <button type="button" onclick="add()" class="add">查询</button>
+            </td>
+        </tr>
+    </table>
+</form>
+
+<div>
+    <table id="list"></table>
+</div>
+
+</body>
+</html>
