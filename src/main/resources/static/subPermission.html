@@ -106,15 +106,15 @@
 
 
         function getSelf() {
-            var submitData = {"source":document.getElementById("source").value, "serviceType": this.name, "wantToChecked":this.checked};
-            alert(JSON.stringify(submitData));
-//            loadData("http://localhost:8080/service/resetpwd", "POST", JSON.stringify(submitData), function (resp) {
-//                if (resp.success) {
-//                    this.setAttribute('class',this.checked ? 'newtdChecked' : 'newtdNotChecked');
-//                } else {
-//                    alert(resp.message);
-//                }
-//            })
+            var obj = this;
+            var submitData = {"source":document.getElementById("source").value, "serviceType": obj.name, "wantToChecked":obj.checked};
+            loadData("http://localhost:8080/service/updatePermisson", "POST", JSON.stringify(submitData), function (resp) {
+                if (resp.success) {
+                    obj.parentNode.className = obj.checked ? 'newtdChecked' : 'newtdNotChecked';
+                } else {
+                    obj.checked=!obj.checked;
+                }
+            })
         }
 
     </script>

@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Random;
 
 import static net.wecash.dingyabin.util.ManyUtil.assertNotNull;
 import static net.wecash.dingyabin.util.ManyUtil.isLegalId;
@@ -172,6 +173,14 @@ public class AddServiceController {
         assertNotNull(map);
         List<Map<String, Object>> permissions = addService.getSubPermissionBySource(map.get("source"));
         return  new Response<>().success().data(permissions).toString();
+    }
+
+
+    @RequestMapping("/updatePermisson")
+    public String updatePermisson(HttpServletRequest req) throws IOException{
+        ReadableHttpServletRequestWrapper requestWrapper = new ReadableHttpServletRequestWrapper(req);
+        Map<String, String> map = genParamMap(requestWrapper.getWrappedParams(), requestWrapper.getWrappedJson());
+        return new Random().nextBoolean() ? new Response<>().success().toString() : new Response<>().fail().msg("xxx").toString();
     }
 
 
