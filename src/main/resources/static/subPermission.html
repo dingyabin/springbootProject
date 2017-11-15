@@ -36,6 +36,11 @@
     </style>
 
     <script type="application/javascript" language="JavaScript">
+        document.onkeydown =function (){
+            if(event.keyCode ==13){
+                submits();
+            }
+        };
 
         function submits() {
             var source = document.getElementById("source").value;
@@ -131,7 +136,7 @@
         </tr>
         <tr>
             <td colspan="2">
-                <button type="button" onclick="submits()" class="add">查询</button>
+                <button type="button" onclick="submits()" class="add" accesskey="">查询</button>
             </td>
         </tr>
     </table>
