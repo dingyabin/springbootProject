@@ -8,7 +8,7 @@
             font-family: 微软雅黑, serif;
         }
 
-        input {
+        #source {
             width: 300px;
             height: 25px;
             border-color:#4A90E2 #4A90E2;
@@ -24,13 +24,19 @@
             width: 65px;
             height: 30px;
         }
-        .newtd{
-            background-color: #4A90E2;
+        .newtdChecked{
+            background-color: limegreen;
+            height: 60px;
+        }
+
+        .newtdNotChecked{
+            background-color: palevioletred;
             height: 60px;
         }
     </style>
 
     <script type="application/javascript" language="JavaScript">
+
         function submits() {
             var source = document.getElementById("source").value;
             if (source == '') {
@@ -38,14 +44,16 @@
                 return;
             }
             var data = JSON.stringify({"source": source});
-            loadData("http://localhost:8080/service/resetpwd", "POST", data, function (resp) {
+            loadData("http://localhost:8080/service/selectPermisson", "POST", data, function (resp) {
                 if (resp.success) {
-                    document.getElementById("finalResult").value = resp.data;
+                    clear();
+                    add(resp.data);
                 } else {
-                    document.getElementById("finalResult").value = resp.message;
+                    alert(resp.message);
                 }
             })
         }
+
 
         function loadData(url, method, data, callback) {
             var xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
@@ -61,23 +69,52 @@
         }
 
 
-        function add() {
+        function add(data) {
             var cellWidth=220;
-            window.cellNum = typeof(window.cellNum) == 'undefined' ? (document.body.scrollWidth - 40) / cellWidth : window.cellNum;
+            window.cellNum =parseInt(typeof(window.cellNum) == 'undefined' ? (document.body.scrollWidth - 40) / cellWidth : window.cellNum);
             var table = document.getElementById("list");
-            for (var i = 0; i < 4; i++) {
+            var rowSize = Math.ceil(data.length / window.cellNum);
+            for (var i = 0; i < rowSize; i++) {
                 var newrow = table.insertRow(-1);
                 for (var j = 0; j <  window.cellNum; j++) {
+                    var cellData = data[window.cellNum * i + j];
+                    if (typeof(cellData) == 'undefined'){
+                        break;
+                    }
                     var newcol = newrow.insertCell(-1);
                     var checkBox=document.createElement("input");
                     checkBox.setAttribute("type","checkbox");
-                    checkBox.setAttribute("name","weqweqwe");
+                    checkBox.setAttribute("name",cellData.serviceType);
+                    checkBox.onclick = getSelf;
+                    checkBox.checked = cellData.hasChecked;
                     newcol.appendChild(checkBox);
-                    newcol.appendChild(document.createTextNode("4232"));
-                    newcol.setAttribute('class','newtd');
+                    newcol.appendChild(document.createTextNode(cellData.serviceType+"   "+cellData.serviceName));
+                    newcol.setAttribute('class', cellData.hasChecked ? 'newtdChecked' : 'newtdNotChecked');
                     newcol.setAttribute('style', 'width:' + cellWidth + 'px');
                 }
             }
+        }
+
+
+        function clear(){
+            var table=document.getElementById("list");
+            var len=document.getElementById("list").rows.length;
+            for(var i=0;i<len;i++){
+                table.deleteRow(0);
+            }
+        }
+
+
+        function getSelf() {
+            var submitData = {"source":document.getElementById("source").value, "serviceType": this.name, "wantToChecked":this.checked};
+            alert(JSON.stringify(submitData));
+//            loadData("http://localhost:8080/service/resetpwd", "POST", JSON.stringify(submitData), function (resp) {
+//                if (resp.success) {
+//                    this.setAttribute('class',this.checked ? 'newtdChecked' : 'newtdNotChecked');
+//                } else {
+//                    alert(resp.message);
+//                }
+//            })
         }
 
     </script>
@@ -94,7 +131,7 @@
         </tr>
         <tr>
             <td colspan="2">
-                <button type="button" onclick="add()" class="add">查询</button>
+                <button type="button" onclick="submits()" class="add">查询</button>
             </td>
         </tr>
     </table>

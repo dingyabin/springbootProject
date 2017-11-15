@@ -22,6 +22,14 @@ public interface AddServiceDao {
         */
        int saveService(Map<String, Object> map);
 
+
+
+       /**
+        * 查找service
+        * @return ServiceName
+        */
+       List<Map<String, Object>> getAllService();
+
        /**
         * 插入serviceDataformat
         * @param map map
@@ -102,5 +110,14 @@ public interface AddServiceDao {
         * @param username  username
         */
        void resetPwd(@Param("source") Long source, @Param("username") String username);
+
+
+       /**
+        * 根据source查找订阅权限
+        * @param source source
+        * @return List<String>
+        */
+       String getSubPermissionBySource(Long source);
+
 
 }

@@ -2,6 +2,7 @@ package net.wecash.dingyabin.services.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import net.wecash.dingyabin.dao.AddServiceDao;
 import net.wecash.dingyabin.services.AddService;
@@ -27,6 +28,7 @@ public class AddServiceImpl implements AddService {
     @Resource
     private AddServiceDao addServiceDao;
 
+    private Splitter splitter= Splitter.on(",").trimResults().omitEmptyStrings();
 
     @Override
     public Map<String, Object> selectByServiceType(String serviceType) {
@@ -194,5 +196,24 @@ public class AddServiceImpl implements AddService {
             throw new BaseBusinessException("E000004", "查无此人!");
         }
         addServiceDao.resetPwd(Long.parseLong(source), username);
+    }
+
+
+    @Override
+    public List<Map<String, Object>> getSubPermissionBySource(String source) {
+        if (Strings.isNullOrEmpty(source)) {
+            throw new BaseBusinessException("E000003", "参数缺失");
+        }
+        Set<String> set = new HashSet<>(splitter.splitToList(addServiceDao.getSubPermissionBySource(Long.parseLong(source))));
+        List<Map<String, Object>> allService = addServiceDao.getAllService();
+        List<Map<String, Object>> objects = Lists.newArrayList();
+        allService.forEach(ele->{
+            Map<String, Object> json = Maps.newHashMap();
+            json.put("serviceType", ele.get("service_type"));
+            json.put("serviceName", ele.get("service_name"));
+            json.put("hasChecked", set.contains(ele.get("service_type").toString()) );
+            objects.add(json);
+        });
+        return objects;
     }
 }

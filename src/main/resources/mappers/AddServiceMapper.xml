@@ -153,6 +153,14 @@
         select * from  client_user   WHERE username = #{username} AND source = #{source}
     </select>
 
+    <select id ="getSubPermissionBySource"  resultType="java.lang.String">
+        select allowed_service_reg  from  clients   WHERE source = #{source}
+    </select>
+
+    <select id ="getAllService"  resultType="java.util.Map">
+        select  *  from  services
+    </select>
+
 
     <update id="updateRequestById" parameterType="java.util.Map">
         update request

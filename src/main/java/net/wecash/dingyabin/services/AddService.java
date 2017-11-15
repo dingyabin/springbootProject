@@ -87,4 +87,13 @@ public interface AddService {
     void resetPwd(String source,String username);
 
 
+
+
+    /**
+     * 根据source查找订阅权限
+     * @param source source
+     * @return List<String>
+     */
+    List<Map<String, Object>> getSubPermissionBySource(String source);
+
 }

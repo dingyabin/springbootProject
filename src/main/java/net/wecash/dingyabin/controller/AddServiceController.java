@@ -163,4 +163,17 @@ public class AddServiceController {
         return  new Response<>().success().data(map).msg("修改成功,新密码: 123456").toString();
     }
 
+
+    @RequestMapping("/selectPermisson")
+    public String selectPermisson(HttpServletRequest req) throws IOException{
+        ReadableHttpServletRequestWrapper requestWrapper = new ReadableHttpServletRequestWrapper(req);
+        Map<String, String> map = genParamMap(requestWrapper.getWrappedParams(), requestWrapper.getWrappedJson());
+        //校验参数
+        assertNotNull(map);
+        List<Map<String, Object>> permissions = addService.getSubPermissionBySource(map.get("source"));
+        return  new Response<>().success().data(permissions).toString();
+    }
+
+
+
 }

@@ -10,7 +10,7 @@
         }
 
         .container {
-            width: 750px;
+            width: 1000px;
             height: 250px;
             display: table;
             position: fixed;
@@ -41,6 +41,13 @@
             vertical-align: middle;
             cursor: pointer;
         }
+        .subPermission {
+            display: table-cell;
+            background-color: darkorange;
+            text-align: center;
+            vertical-align: middle;
+            cursor: pointer;
+        }
     </style>
 
     <script type="application/javascript" language="JavaScript">
@@ -58,6 +65,7 @@
     <div class="addServicve"    onclick="go('addService.html')"> <span>添加服务</span></div>
     <div class="callbackConfig" onclick="go('callback.html')">   <span>配置回调</span></div>
     <div class="resetpwd"       onclick="go('resetpwd.html')">   <span>重置密码</span></div>
+    <div class="subPermission"  onclick="go('subPermission.html')">   <span>订阅权限</span></div>
 </div>
 </body>
 </html>
