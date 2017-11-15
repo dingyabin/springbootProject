@@ -177,12 +177,12 @@ public class AddServiceController {
 
 
     @RequestMapping("/updatePermisson")
-    public String updatePermisson(HttpServletRequest req) throws IOException{
+    public String updatePermisson(HttpServletRequest req) throws IOException {
         ReadableHttpServletRequestWrapper requestWrapper = new ReadableHttpServletRequestWrapper(req);
         Map<String, String> map = genParamMap(requestWrapper.getWrappedParams(), requestWrapper.getWrappedJson());
-        return new Random().nextBoolean() ? new Response<>().success().toString() : new Response<>().fail().msg("xxx").toString();
+        addService.updatePermisson(map.get("source"), map.get("serviceType"), map.get("wantToChecked"));
+        return new Response<>().success().toString();
     }
-
 
 
 }

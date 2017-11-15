@@ -2,6 +2,7 @@ package net.wecash.dingyabin.services.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import net.wecash.dingyabin.dao.AddServiceDao;
@@ -204,6 +205,9 @@ public class AddServiceImpl implements AddService {
         if (Strings.isNullOrEmpty(source)) {
             throw new BaseBusinessException("E000003", "参数缺失");
         }
+        if (CollectionUtils.isEmpty(addServiceDao.selectUser(Long.parseLong(source), null))) {
+            throw new BaseBusinessException("E000004", "非法渠道号!");
+        }
         Set<String> set = new HashSet<>(splitter.splitToList(addServiceDao.getSubPermissionBySource(Long.parseLong(source))));
         List<Map<String, Object>> allService = addServiceDao.getAllService();
         List<Map<String, Object>> objects = Lists.newArrayList();
@@ -215,5 +219,24 @@ public class AddServiceImpl implements AddService {
             objects.add(json);
         });
         return objects;
+    }
+
+
+    @Override
+    public void updatePermisson(String source, String serviceType, String wantToChecked) {
+        if (Strings.isNullOrEmpty(source) || Strings.isNullOrEmpty(serviceType)
+                || Strings.isNullOrEmpty(wantToChecked)) {
+            throw new BaseBusinessException("E000003", "参数缺失");
+        }
+        if (CollectionUtils.isEmpty(addServiceDao.selectUser(Long.parseLong(source), null))) {
+            throw new BaseBusinessException("E000004", "非法渠道号!");
+        }
+        Set<String> set = new HashSet<>(splitter.splitToList(addServiceDao.getSubPermissionBySource(Long.parseLong(source))));
+        if (Boolean.parseBoolean(wantToChecked)) {
+            set.add(serviceType);
+        } else {
+            set.remove(serviceType);
+        }
+        addServiceDao.updateSubPermission(Long.parseLong(source), Joiner.on(",").skipNulls().join(set));
     }
 }

@@ -45,8 +45,8 @@
             }
             var data = JSON.stringify({"source": source});
             loadData("http://localhost:8080/service/selectPermisson", "POST", data, function (resp) {
+                clear();
                 if (resp.success) {
-                    clear();
                     add(resp.data);
                 } else {
                     alert(resp.message);

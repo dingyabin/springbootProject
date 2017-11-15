@@ -96,4 +96,12 @@ public interface AddService {
      */
     List<Map<String, Object>> getSubPermissionBySource(String source);
 
+
+    /**
+     * 根据source,serviceType修改订阅权限
+     * @param source
+     * @param serviceType
+     */
+    void updatePermisson(String source,String serviceType,String wantToChecked);
+
 }

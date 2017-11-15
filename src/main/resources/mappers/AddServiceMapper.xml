@@ -150,12 +150,22 @@
     </select>
 
     <select id ="selectUser"  resultType="java.util.Map">
-        select * from  client_user   WHERE username = #{username} AND source = #{source}
+        select *
+            from  client_user
+        WHERE source = #{source}
+        <if test="username != null">
+             AND  username = #{username}
+        </if>
     </select>
 
     <select id ="getSubPermissionBySource"  resultType="java.lang.String">
         select allowed_service_reg  from  clients   WHERE source = #{source}
     </select>
+
+
+    <update id ="updateSubPermission">
+        update  clients   set  allowed_service_reg = #{allowedServiceReg}  WHERE source = #{source}
+    </update>
 
     <select id ="getAllService"  resultType="java.util.Map">
         select  *  from  services

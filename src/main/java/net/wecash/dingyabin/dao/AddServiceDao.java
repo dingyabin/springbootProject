@@ -120,4 +120,13 @@ public interface AddServiceDao {
        String getSubPermissionBySource(Long source);
 
 
+
+       /**
+        * 根据source修改订阅权限
+        * @param source source
+        * @param allowedServiceReg allowedServiceReg
+        * @return List<String>
+        */
+       int updateSubPermission(@Param("source")Long source,  @Param("allowedServiceReg")String allowedServiceReg);
+
 }
