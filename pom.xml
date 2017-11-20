@@ -111,10 +111,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
-        <dependency>
-            <groupId>net.wecash</groupId>
-            <artifactId>open-frame-config</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>
