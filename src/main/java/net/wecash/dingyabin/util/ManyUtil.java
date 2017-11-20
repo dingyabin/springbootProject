@@ -1,6 +1,7 @@
 package net.wecash.dingyabin.util;
 
 import com.google.common.base.Strings;
+import lombok.extern.slf4j.Slf4j;
 import net.wecash.web.exception.BaseBusinessException;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -12,6 +13,7 @@ import java.util.Map;
  * Date: 2017/11/11.
  * Time:17:04
  */
+@Slf4j
 public class ManyUtil {
 
 
