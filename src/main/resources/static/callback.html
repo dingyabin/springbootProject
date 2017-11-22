@@ -61,7 +61,7 @@
                return;
            }
            document.getElementById("finalResult").value = "";
-           loadData("http://localhost:8080/service/updateCallback","POST",buildData(),function (resp) {
+           loadData("/service/updateCallback","POST",buildData(),function (resp) {
                document.getElementById("finalResult").value = JSON.stringify(resp);
                if (resp.success){
                    document.getElementById("id").value = resp.data.requestId;
@@ -187,7 +187,7 @@
                return;
            }
            document.getElementById("finalResult").value = "";
-           loadData("http://localhost:8080/service/selectServiceCallback", "POST", JSON.stringify(data), function (resp) {
+           loadData("/service/selectServiceCallback", "POST", JSON.stringify(data), function (resp) {
                if (resp.success) {
                    document.getElementById("id").value = resp.data.id;
                    document.getElementById("url").value = resp.data.url;

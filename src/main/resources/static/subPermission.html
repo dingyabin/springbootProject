@@ -49,7 +49,7 @@
                 return;
             }
             var data = JSON.stringify({"source": source});
-            loadData("http://localhost:8080/service/selectPermisson", "POST", data, function (resp) {
+            loadData("/service/selectPermisson", "POST", data, function (resp) {
                 clear();
                 if (resp.success) {
                     add(resp.data);
@@ -113,7 +113,7 @@
         function getSelf() {
             var obj = this;
             var submitData = {"source":document.getElementById("source").value, "serviceType": obj.name, "wantToChecked":obj.checked};
-            loadData("http://localhost:8080/service/updatePermisson", "POST", JSON.stringify(submitData), function (resp) {
+            loadData("/service/updatePermisson", "POST", JSON.stringify(submitData), function (resp) {
                 if (resp.success) {
                     obj.parentNode.className = obj.checked ? 'newtdChecked' : 'newtdNotChecked';
                 } else {

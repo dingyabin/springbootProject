@@ -39,7 +39,7 @@
                 return;
             }
             var data = JSON.stringify({"source": source, "username": username});
-            loadData("http://localhost:8080/service/resetpwd", "POST", data, function (resp) {
+            loadData("/service/resetpwd", "POST", data, function (resp) {
                 if (resp.success) {
                     document.getElementById("finalResult").value = resp.data;
                 } else {
