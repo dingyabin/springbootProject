@@ -32,8 +32,12 @@
         </encoder>
     </appender>
 
+    <!-- 引入 WeLogAppender -->
+    <include resource="logbackWeLogAppender.xml"/>
+
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
+        <appender-ref ref="WeLog"/>
         <!--<appender-ref ref="FILE"/>-->
     </root>
 

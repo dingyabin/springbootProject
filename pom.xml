@@ -137,7 +137,7 @@
 
 
     <build>
-        <finalName>springbootProject</finalName>
+        <finalName>open-manage</finalName>
 
         <resources>
             <resource>

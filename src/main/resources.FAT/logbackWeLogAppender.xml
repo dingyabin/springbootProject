@@ -1,0 +1,6 @@
+<included>
+    <appender name="WeLog" class="net.wecash.WeLogAppender">
+        <url>http://open-vpc.wecash.net:9130/welog/collect</url>
+        <GZIP>true</GZIP>
+    </appender>
+</included>
