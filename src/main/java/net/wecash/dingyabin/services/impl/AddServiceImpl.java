@@ -21,7 +21,9 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * Created by dingyabin on 2017/11/8.
+ *
+ * @author dingyabin
+ * @date 2017/11/8
  */
 @Service("addService")
 public class AddServiceImpl implements AddService {
@@ -172,7 +174,7 @@ public class AddServiceImpl implements AddService {
                                        .replaceAll("\\$\\{url\\}", maps.get("url"))
                                        .replaceAll("\\$\\{method\\}", maps.get("method"))
                                        .replaceAll("\\$\\{header\\}", maps.get("header"))
-                                       .replaceAll("\\$\\{params\\}", buildRequestParams(maps.get("params")))
+                                       .replaceAll("\\$\\{params\\}", buildRequestParams(maps.get("params")).replaceAll("\\$", "\\\\\\$"))
                                        .replaceAll("\\$\\{resultParseTemplate\\}", maps.get("resultParseTemplate") == null
                                                ? "null" : String.format("'%s'",maps.get("resultParseTemplate")));
 
