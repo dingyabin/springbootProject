@@ -116,6 +116,11 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>net.wecash</groupId>
+            <artifactId>open-frame-redis</artifactId>
+        </dependency>
     </dependencies>
 
 

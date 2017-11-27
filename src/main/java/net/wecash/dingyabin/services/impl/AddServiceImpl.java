@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- *
  * @author dingyabin
  * @date 2017/11/8
  */
@@ -31,11 +30,11 @@ public class AddServiceImpl implements AddService {
     @Resource
     private AddServiceDao addServiceDao;
 
-    private Splitter splitter= Splitter.on(",").trimResults().omitEmptyStrings();
+    private Splitter splitter = Splitter.on(",").trimResults().omitEmptyStrings();
 
     @Override
     public Map<String, Object> selectByServiceType(String serviceType) {
-        if (StringUtils.isBlank(serviceType)){
+        if (StringUtils.isBlank(serviceType)) {
             return null;
         }
         return addServiceDao.selectByServiceType(serviceType);
@@ -44,7 +43,7 @@ public class AddServiceImpl implements AddService {
 
     @Override
     public Map<String, Object> selectRequestById(String requestId) {
-        if (StringUtils.isBlank(requestId)){
+        if (StringUtils.isBlank(requestId)) {
             return null;
         }
         return addServiceDao.selectByRequestId(Long.valueOf(requestId));
@@ -102,8 +101,8 @@ public class AddServiceImpl implements AddService {
         //爬虫的request
         if (map.get("calllbackIndex") == null) {
             requestMap.put("params", buildRequestParams(map.get("params")));
-        //回调的request
-        }else {
+            //回调的request
+        } else {
             requestMap.put("params", map.get("params"));
         }
         if (StringUtils.isNotBlank(map.get("resultParseTemplate"))) {
@@ -126,17 +125,15 @@ public class AddServiceImpl implements AddService {
     }
 
 
-
-    private String buildRequestParams(String originalParams){
+    private String buildRequestParams(String originalParams) {
         JSONArray arrays = JSONObject.parseArray(Optional.ofNullable(originalParams).orElse("[]"));
         Map<String, String> paramMap = Maps.newHashMap();
         for (int i = 0; i < arrays.size(); i++) {
             JSONObject jsonObject = arrays.getJSONObject(i);
             paramMap.put(jsonObject.getString("crawlerParam"), jsonObject.getString("platParam"));
         }
-        return  GsonUtils.toJson(paramMap);
+        return GsonUtils.toJson(paramMap);
     }
-
 
 
     private List<Map<String, Object>> buildCodeDictParams(Map<String, String> map) {
@@ -156,8 +153,6 @@ public class AddServiceImpl implements AddService {
     }
 
 
-
-
     @Override
     public String buildSQL(Map<String, String> maps) throws IOException {
         List<String> strings = IOUtils.readLines(AddServiceImpl.class.getResourceAsStream("/static/addService.txt"), "UTF-8");
@@ -166,7 +161,7 @@ public class AddServiceImpl implements AddService {
         }
         String firstThreeSQL = strings.get(0) + "\n\n" + strings.get(1) + "\n\n" + strings.get(2) + "\n\n";
 
-        String finalSQL = firstThreeSQL.replaceAll("\\$\\{serviceName\\}",maps.get("serviceName"))
+        String finalSQL = firstThreeSQL.replaceAll("\\$\\{serviceName\\}", maps.get("serviceName"))
                                        .replaceAll("\\$\\{serviceType\\}", maps.get("serviceType"))
                                        .replaceAll("\\$\\{serviceDescription\\}", maps.get("serviceDescription"))
                                        .replaceAll("\\$\\{serviceFormatType\\}", maps.get("serviceFormatType"))
@@ -176,7 +171,7 @@ public class AddServiceImpl implements AddService {
                                        .replaceAll("\\$\\{header\\}", maps.get("header"))
                                        .replaceAll("\\$\\{params\\}", buildRequestParams(maps.get("params")).replaceAll("\\$", "\\\\\\$"))
                                        .replaceAll("\\$\\{resultParseTemplate\\}", maps.get("resultParseTemplate") == null
-                                               ? "null" : String.format("'%s'",maps.get("resultParseTemplate")));
+                                               ? "null" : String.format("'%s'", maps.get("resultParseTemplate")));
 
         for (Map<String, Object> map : buildCodeDictParams(maps)) {
             finalSQL += strings.get(3).replaceAll("\\$\\{key\\}", map.get("key").toString())
@@ -195,7 +190,7 @@ public class AddServiceImpl implements AddService {
             throw new BaseBusinessException("E000003", "参数缺失");
         }
         Map<String, Object> user = addServiceDao.selectUser(Long.parseLong(source), username);
-        if (CollectionUtils.isEmpty(user)){
+        if (CollectionUtils.isEmpty(user)) {
             throw new BaseBusinessException("E000004", "查无此人!");
         }
         addServiceDao.resetPwd(Long.parseLong(source), username);
@@ -213,11 +208,11 @@ public class AddServiceImpl implements AddService {
         Set<String> set = new HashSet<>(splitter.splitToList(addServiceDao.getSubPermissionBySource(Long.parseLong(source))));
         List<Map<String, Object>> allService = addServiceDao.getAllService();
         List<Map<String, Object>> objects = Lists.newArrayList();
-        allService.forEach(ele->{
+        allService.forEach(ele -> {
             Map<String, Object> json = Maps.newHashMap();
             json.put("serviceType", ele.get("service_type"));
             json.put("serviceName", ele.get("service_name"));
-            json.put("hasChecked", set.contains(ele.get("service_type").toString()) );
+            json.put("hasChecked", set.contains(ele.get("service_type").toString()));
             objects.add(json);
         });
         return objects;
