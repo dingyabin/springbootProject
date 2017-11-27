@@ -193,7 +193,7 @@ public class AddServiceController {
 
     @RequestMapping("/delCache")
     public String delCache() {
-        return removeCache() ? new Response<>().success().toString()
+        return removeCache() ? new Response<>().success().msg("删除缓存成功").toString()
                              : new Response<>().fail().msg("删除缓存出现异常").toString();
     }
 

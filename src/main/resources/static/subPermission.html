@@ -24,6 +24,14 @@
             width: 65px;
             height: 30px;
         }
+        .del {
+            padding: 2px 5px 2px 5px;
+            border-radius:5px;
+            border-style: none;
+            background-color: hotpink;
+            width: 65px;
+            height: 30px;
+        }
         .newtdChecked{
             background-color: limegreen;
             height: 60px;
@@ -122,6 +130,13 @@
             })
         }
 
+
+        function removeCache() {
+            loadData("/service/delCache", "GET", {}, function (resp) {
+                alert(resp.message);
+            })
+        }
+
     </script>
 </head>
 
@@ -135,8 +150,9 @@
             <td><input id="source"/></td>
         </tr>
         <tr>
-            <td colspan="2">
+            <td>
                 <button type="button" onclick="submits()" class="add" accesskey="">查询</button>
+                <button type="button" onclick="removeCache()" class="del" accesskey="">删除缓存</button>
             </td>
         </tr>
     </table>
