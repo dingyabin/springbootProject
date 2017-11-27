@@ -3,7 +3,6 @@ package net.wecash.dingyabin.controller;
 import com.google.common.base.Strings;
 import net.wecash.dingyabin.services.AddService;
 import lombok.extern.slf4j.Slf4j;
-import net.wecash.redis.JedisUtils;
 import net.wecash.web.Response;
 import net.wecash.web.exception.BaseBusinessException;
 import net.wecash.web.filter.ReadableHttpServletRequestWrapper;
@@ -60,9 +59,6 @@ public class AddServiceController {
 
             //插入CodeDict
             addService.saveCodeDict(paramMap);
-
-            //删除缓存
-            removeCache();
         }
 
         //打印sql
@@ -184,35 +180,7 @@ public class AddServiceController {
         ReadableHttpServletRequestWrapper requestWrapper = new ReadableHttpServletRequestWrapper(req);
         Map<String, String> map = genParamMap(requestWrapper.getWrappedParams(), requestWrapper.getWrappedJson());
         addService.updatePermisson(map.get("source"), map.get("serviceType"), map.get("wantToChecked"));
-        removeCache();
         return new Response<>().success().toString();
     }
-
-
-
-
-    @RequestMapping("/delCache")
-    public String delCache() {
-        return removeCache() ? new Response<>().success().msg("删除缓存成功").toString()
-                             : new Response<>().fail().msg("删除缓存出现异常").toString();
-    }
-
-
-
-
-    /**
-     * 删除缓存
-     */
-    private boolean removeCache() {
-        try {
-            JedisUtils.del("titan_cache_prefix_Map_String_Services_Map_String_Services");
-            return true;
-        } catch (Exception e) {
-            log.error("删除缓存失败............", e);
-            return false;
-        }
-    }
-
-
 
 }
