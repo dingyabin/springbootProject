@@ -62,7 +62,7 @@
            }
            document.getElementById("finalResult").value = "";
            loadData("/service/updateCallback","POST",buildData(),function (resp) {
-               document.getElementById("finalResult").value = JSON.stringify(resp);
+               document.getElementById("finalResult").value = JSON.stringify(resp, null, 2);
                if (resp.success){
                    document.getElementById("id").value = resp.data.requestId;
                }
@@ -192,7 +192,7 @@
                    document.getElementById("id").value = resp.data.id;
                    document.getElementById("url").value = resp.data.url;
                    document.getElementById("header").value =resp.data.header;
-                   document.getElementById("params").value = resp.data.params;
+                   document.getElementById("params").value = JSON.stringify(JSON.parse(resp.data.params), null, 2);;
                    var options = document.getElementById("method").options;
                    for (var i = 0; i < options.length; i++)
                        if (options[i].value == resp.data.method){
@@ -207,7 +207,7 @@
                    document.getElementById("params").value = "";
                    document.getElementById("resultParseTemplate").value =null;
                }
-               document.getElementById("finalResult").value =JSON.stringify(resp);
+               document.getElementById("finalResult").value = JSON.stringify(resp, null, 2);
            })
        }
     </script>
@@ -283,7 +283,7 @@
             <tr>
                 <td>请求参数(params):</td>
                 <td>
-                    <textarea rows="8" cols="70" id="params" required="required"></textarea>
+                    <textarea rows="12" cols="70" id="params" required="required"></textarea>
                     <button type="button" onclick="defaultParam()" class="add">默认配置</button>
                 </td>
             </tr>
@@ -315,7 +315,7 @@
             </tr>
             <tr>
                 <td>执行结果:</td>
-                <td><textarea rows="6" cols="160" id="finalResult"></textarea></td>
+                <td><textarea rows="20" cols="160" id="finalResult"></textarea></td>
             </tr>
             <tr>
                 <td colspan="2">
