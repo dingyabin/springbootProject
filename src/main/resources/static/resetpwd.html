@@ -41,7 +41,7 @@
             var data = JSON.stringify({"source": source, "username": username});
             loadData("/service/resetpwd", "POST", data, function (resp) {
                 if (resp.success) {
-                    document.getElementById("finalResult").value = resp.data;
+                    document.getElementById("finalResult").value = JSON.stringify(resp.data) + resp.message;
                 } else {
                     document.getElementById("finalResult").value = resp.message;
                 }
