@@ -69,7 +69,6 @@ public class AddServiceController {
     }
 
 
-
     @RequestMapping("/selectServiceCallback")
     public String selectServiceCallback(HttpServletRequest req) throws IOException {
         ReadableHttpServletRequestWrapper requestWrapper = new ReadableHttpServletRequestWrapper(req);
@@ -77,25 +76,22 @@ public class AddServiceController {
         //校验参数
         assertNotNull(map);
 
-        List<Map<String, Object>> mapList= addService.selectClientService(map.get("source"), map.get("serviceType"));
-        if (CollectionUtils.isEmpty(mapList)){
-            return new Response<>().fail().msg("还没有订阅:" + map.get("serviceType")+"，请先订阅").toString();
+        List<Map<String, Object>> mapList = addService.selectClientService(map.get("source"), map.get("serviceType"));
+        if (CollectionUtils.isEmpty(mapList)) {
+            return new Response<>().fail().msg("还没有订阅:" + map.get("serviceType") + "，请先订阅").toString();
         }
         String requestId = getRequestId(map.get("calllbackIndex"), mapList);
         if (requestId != null) {
             Map<String, Object> request = addService.selectRequestById(requestId);
             return new Response<>().success().data(request).toString();
         }
-        return new Response<>().fail().msg("还没有配置第" + map.get("calllbackIndex")+"次回调").toString();
+        return new Response<>().fail().msg("还没有配置第" + map.get("calllbackIndex") + "次回调").toString();
     }
 
 
-
-
     /**
-     *
      * @param calllbackIndex 第几次回调
-     * @param mapList  clientservivce集合
+     * @param mapList        clientservivce集合
      * @return RequestId
      */
     private String getRequestId(String calllbackIndex, List<Map<String, Object>> mapList) {
@@ -118,18 +114,18 @@ public class AddServiceController {
         ReadableHttpServletRequestWrapper requestWrapper = new ReadableHttpServletRequestWrapper(req);
         Map<String, String> map = genParamMap(requestWrapper.getWrappedParams(), requestWrapper.getWrappedJson());
         //校验参数
-        assertNotNull(map,"resultParseTemplate", "codeInfo","requestId");
+        assertNotNull(map, "resultParseTemplate", "codeInfo", "requestId");
 
         //有requestid，修改request
-        if (!Strings.isNullOrEmpty(map.get("requestId"))){
+        if (!Strings.isNullOrEmpty(map.get("requestId"))) {
             addService.updateRequestById(map);
             return new Response<>().success().data(map).toString();
         }
 
         //无requestid，查找ClientService
-        List<Map<String, Object>> clientServiceList= addService.selectClientService(map.get("source"), map.get("serviceType"));
-        if (CollectionUtils.isEmpty(clientServiceList)){
-            return new Response<>().fail().msg("还没有订阅:" + map.get("serviceType")+"，请先订阅").toString();
+        List<Map<String, Object>> clientServiceList = addService.selectClientService(map.get("source"), map.get("serviceType"));
+        if (CollectionUtils.isEmpty(clientServiceList)) {
+            return new Response<>().fail().msg("还没有订阅:" + map.get("serviceType") + "，请先订阅").toString();
         }
 
         //根据查找到的ClientService,查找回调Id
@@ -141,14 +137,12 @@ public class AddServiceController {
             addService.updateClientServivce(map);
             return new Response<>().success().data(map).toString();
             //requestId！=null,直接根据requestId修改request
-        }else {
+        } else {
             map.put("requestId", requestId);
             addService.updateRequestById(map);
             return new Response<>().success().data(map).toString();
         }
     }
-
-
 
 
     @RequestMapping("/resetpwd")
@@ -160,18 +154,18 @@ public class AddServiceController {
 
         //重置密码
         addService.resetPwd(map.get("source"), map.get("username"));
-        return  new Response<>().success().data(map).msg("修改成功,新密码: 123456").toString();
+        return new Response<>().success().data(map).msg("修改成功,新密码: 123456").toString();
     }
 
 
     @RequestMapping("/selectPermisson")
-    public String selectPermisson(HttpServletRequest req) throws IOException{
+    public String selectPermisson(HttpServletRequest req) throws IOException {
         ReadableHttpServletRequestWrapper requestWrapper = new ReadableHttpServletRequestWrapper(req);
         Map<String, String> map = genParamMap(requestWrapper.getWrappedParams(), requestWrapper.getWrappedJson());
         //校验参数
         assertNotNull(map);
         List<Map<String, Object>> permissions = addService.getSubPermissionBySource(map.get("source"));
-        return  new Response<>().success().data(permissions).toString();
+        return new Response<>().success().data(permissions).toString();
     }
 
 
