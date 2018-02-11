@@ -129,4 +129,11 @@ public interface AddServiceDao {
         */
        int updateSubPermission(@Param("source")Long source,  @Param("allowedServiceReg")String allowedServiceReg);
 
+
+       /**
+        * 查找授权项
+        * @return 集合
+        */
+       List<Map<String,String>> selectAuthServcice();
+
 }

@@ -104,4 +104,11 @@ public interface AddService {
      */
     void updatePermisson(String source,String serviceType,String wantToChecked);
 
+
+    /**
+     * 查找授权项
+     * @return 集合
+     */
+    List<Map<String,String>> selectAuthServcice();
+
 }

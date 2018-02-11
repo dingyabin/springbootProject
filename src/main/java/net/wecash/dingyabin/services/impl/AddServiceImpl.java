@@ -236,4 +236,10 @@ public class AddServiceImpl implements AddService {
         }
         addServiceDao.updateSubPermission(Long.parseLong(source), Joiner.on(",").skipNulls().join(set));
     }
+
+
+    @Override
+    public List<Map<String, String>> selectAuthServcice() {
+        return addServiceDao.selectAuthServcice();
+    }
 }

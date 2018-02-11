@@ -50,6 +50,18 @@
 
     <script type="application/javascript" language="JavaScript">
 
+        function initServiceType() {
+            loadData("/service/selectAuthServcice", "GET", null, function (resp) {
+                if (resp.success) {
+                    var serviceType = document.getElementById("serviceType");
+                    for (var i = 0; i < resp.data.length; i++) {
+                        serviceType.add(new Option(resp.data[i].service_name, resp.data[i].service_type));
+                    }
+                }
+            });
+        }
+
+
        function submits() {
            var result = inputVailed();
            if (!result.ok){
@@ -214,7 +226,7 @@
 </head>
 
 
- <body>
+ <body onload="initServiceType()">
     <center><h3>配置回调</h3></center>
 
     <form id="serviceTable">
@@ -231,26 +243,7 @@
             <tr>
                 <td>服务类型(serviceType):</td>
                 <td>
-                    <select id="serviceType" style="width:90px">
-                        <option value="transportation"> 运营商</option>
-                        <option value="insurance"> 社保</option>
-                        <option value="fund"> 公积金</option>
-                        <option value="taobao"> 淘宝</option>
-                        <option value="xuexinwang"> 学信网</option>
-                        <option value="jingdong"> 京东</option>
-                        <option value="central_bank_report"> 央行征信报告</option>
-                        <option value="credit_bank"> 信用卡网银</option>
-                        <option value="debit_bank"> 储蓄卡网银</option>
-                        <option value="exmail"> 企业邮箱</option>
-                        <option value="credit_card"> 信用卡账单邮箱</option>
-                        <option value="alipay"> 支付宝</option>
-                        <option value="contacts"> 通讯录</option>
-                        <option value="maimai"> 脉脉</option>
-                        <option value="sesame_credit_auth"> 芝麻信用</option>
-                        <option value="short_message"> 短信授权</option>
-                        <option value="railage"> 12306授权</option>
-                        <option value="tongye">同业授权</option>
-                    </select>
+                    <select id="serviceType" style="width:90px"></select>
                 </td>
             </tr>
             <tr>

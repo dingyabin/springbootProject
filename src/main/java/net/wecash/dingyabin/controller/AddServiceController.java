@@ -177,4 +177,13 @@ public class AddServiceController {
         return new Response<>().success().toString();
     }
 
+
+    @RequestMapping("/selectAuthServcice")
+    public String selectAuthServcice() {
+        return new Response<List<Map<String,String>>>().success()
+                                                       .data(addService.selectAuthServcice())
+                                                       .toString();
+    }
+
+
 }

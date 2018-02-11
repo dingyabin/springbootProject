@@ -217,4 +217,23 @@
         WHERE username = #{username} AND source = #{source};
     </update>
 
+
+    <select id="selectAuthServcice" resultType="java.util.Map">
+        SELECT
+            service_type,
+            service_name
+        FROM
+            services
+        WHERE
+            service_type IN (
+                SELECT DISTINCT
+                    service_type
+                FROM
+                    `service_data_format`
+                WHERE
+                    service_format_type = 'page'
+                AND state = 'normal'
+            )
+    </select>
+
 </mapper>
